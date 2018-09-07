@@ -8,7 +8,22 @@ from xml.dom import minidom
 import os
 import time
 import random
-import numpy
+
+
+def get_logo_name_dict(logo_dir):  # 输入的是存放logo 的文件夹
+    logo_list = os.listdir(logo_dir)
+    logo_name_dict = {}
+    for i in range(len(logo_list)):  # 遍历文件夹下面的文件夹
+        path = os.path.join(logo_dir, logo_list[i])  # 获取文件夹的绝对路径
+        path_list = os.listdir(path)  # 获取文件夹下的文件列表
+        for j in range(len(path_list)):  # 去掉文件名中的后缀，只提取前面的四位编码  遍历文件夹下面的文件夹下的文件
+            # index = path_list[j].rfind('.')
+            # logo_name_dict[path_list[j][:index]] = logo_list[i]
+            logo_name_dict[path_list[j]] = logo_list[i]
+
+    # print(logo_name_dict)
+    # print(sorted(logo_name_dict.items()))
+    return logo_name_dict  # 返回logo文件名列表，不包含.后缀
 
 
 # 读取logo分类class.txt文件的每一行内容并存储到列表中， 返回列表
@@ -93,7 +108,6 @@ def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='l
     base_im = base_im.crop((random.randint(1, 10), random.randint(1, 10), base_im_w, base_im_h))  # 裁剪图片 改变背景的内容
     base_im = base_im.resize((1280, 1024))  # 最后输出的图片大小统一成 比赛时需要的数据大小
 
-
     logo_start_x = int(logo_start_x * base_im_w)  # 需要调的参 logo预测起点的x横坐标，常数是宽度比例
     logo_start_y = int(logo_start_y * base_im_h)  # 需要调的参 logo预测起点的y纵坐标， 常数是高度比例
     if direction == 'right':
@@ -160,54 +174,56 @@ def go(work_dir, loop=5):
         logo_inf_name = "information.txt"  # logo分类的文件
         logo_inf_path = os.path.join(logo_txt_dir, logo_inf_name)  # logo信息文件的完整路径
         inf_dict = txt2dict(logo_inf_path)  # logo编码后面作为字典的键。如：{'1001': ['禁止通行', '01'],
-        base_list = os.listdir(base_dir)
-        for base_name in base_list:
-            base_name_first = os.path.splitext(base_name)[0]  # 提取背景图片的文件名（不包含后缀.jpg）
-            base_im_path = os.path.join(base_dir, base_name)  # 组成完整的路径：路径加文件名
-            logo_list = os.listdir(logo_dir)
-            for logo_dir_list in logo_list:  # 文件夹列表
-                logo_path = os.path.join(logo_dir, logo_dir_list)
-                logo_list = os.listdir(logo_path)  # 文件夹下面的文件列表
-                for logo_name in logo_list:  # 遍历logo图片
-                    logo_im_path = os.path.join(logo_path, logo_name)
-                    logo_name_first = os.path.splitext(logo_name)[0]
-                    base_im = Image.open(base_im_path)  # 打开背景图片
-                    logo_im = Image.open(logo_im_path)  # 打开logo图片
+        base_list = os.listdir(base_dir)  # 获取背景图片列表
 
-                    di = random.random()  # 分配三种方式数量比例
-                    if di < 0.6:
-                        direction = "right"
-                    elif di > 0.2:
-                        direction = "light"
-                    else:
-                        direction = "level"
-                    base_im, data_mark = add_logo(base_im, logo_im, direction=direction)  # 返回图片和用于打标的数据
-                    number += 1  # 用于统计生成图片的数量，即当前图片的编号
-                    save_im_name = "%06d.jpg" % number  # 6位整数保存，前面用零补齐
-                    save_im_path = os.path.join(save_im_dir, save_im_name)
-                    base_im.save(save_im_path)  # 保存图片到指定路径
-                    save_xml_name = "%06d.xml" % number  # 拼凑保存时，XML标记文件的名称
+        logo_name_dict = get_logo_name_dict(logo_dir)
+        base_name = base_list[random.randint(0, len(base_list) - 1)]  # 随机选择一个背景图片
+        base_name_first = os.path.splitext(base_name)[0]  # 提取背景图片的文件名（不包含后缀.jpg）
+        base_im_path = os.path.join(base_dir, base_name)  # 组成完整的路径：路径加文件名
+        logo_name_list = sorted(logo_name_dict.items())  # 将logo的字典信息转化成 列表信息（logo名称（不含后缀）：所属的文件夹）
+        logo_name = logo_name_list[random.randint(0, len(list(logo_name_dict))) - 1][0]  # 随机选取一个logo图片
+        logo_dir = os.path.join(logo_dir, logo_name_dict[logo_name])
+        logo_im_path = os.path.join(logo_dir, logo_name)
+        logo_name_first = os.path.splitext(logo_name)[0]
 
-                    save_xml_path = os.path.join(save_xml_dir, save_xml_name)
-                    logo_type = inf_dict[logo_name_first]  # 找到这个编号的logo对应的类型（汉字） ['旅游', '08']
-                    xml_folder = os.path.split(logo_dir)[-1]  # 获取当前所在文件夹的名称
-                    xml_fullname = base_name_first + '_' + logo_name_first + '.jpg'  # 拼凑保存时，图片文件的名称
-                    root = edit_xml(xml_fullname, save_im_name, logo_type, xml_folder, data_mark)  # ########
-                    tree = ET.ElementTree(root)
-                    tree.write(save_xml_path, encoding="UTF-8", xml_declaration=True)  # 将tree内容写入save_xml_path
-                    root = ET.parse(save_xml_path)  # 解析（读取）save_xml_path文件
-                    file_lines = minidom.parseString(ET.tostring(root, encoding="Utf-8")).toprettyxml(
-                        indent="\t")  # 转多行格式
-                    file_line = open(save_xml_path, "w", encoding="utf-8")  # 打开原来的单行格式文件
-                    file_line.write(file_lines)  # 将多行内容写入之前的单行文件中（单行文件内容格式化后写入的，之前内容全部消失）
-                    file_line.close()
-                    if random.random() < 0.7:  # 设置训练数据集的比例
-                        in_file_train.write("%06d\n" % number)
-                    else:
-                        in_file_test.write("%06d\n" % number)
-                    # print(u'已合成图片%s，已生成标记文件%s' % (save_im_name, save_xml_name))
-            end = time.time()
-            print(u'logo添加成功———logo添加成功———logo添加成功——————————已完成%d张,用时%d秒，平局1000张图片用时%d秒' % (
-                number, (end - start), (1000 * (end - start)) / number))
+        base_im = Image.open(base_im_path)  # 打开背景图片
+        logo_im = Image.open(logo_im_path)  # 打开logo图片
+        di = random.random()  # 分配三种方式数量比例
+
+        if di < 0.6:
+            direction = "right"
+        elif di > 0.2:
+            direction = "light"
+        else:
+            direction = "level"
+
+        base_im, data_mark = add_logo(base_im, logo_im, direction=direction)  # 返回图片和用于打标的数据
+        number += 1  # 用于统计生成图片的数量，即当前图片的编号
+        save_im_name = "%06d.jpg" % number  # 6位整数保存，前面用零补齐
+        save_im_path = os.path.join(save_im_dir, save_im_name)
+        base_im.save(save_im_path)  # 保存图片到指定路径
+        save_xml_name = "%06d.xml" % number  # 拼凑保存时，XML标记文件的名称
+
+        save_xml_path = os.path.join(save_xml_dir, save_xml_name)
+        logo_type = inf_dict[logo_name_first]  # 找到这个编号的logo对应的类型（汉字） ['旅游', '08']
+        xml_folder = os.path.split(logo_dir)[-1]  # 获取当前所在文件夹的名称
+        xml_fullname = base_name_first + '_' + logo_name_first + '.jpg'  # 拼凑保存时，图片文件的名称
+        root = edit_xml(xml_fullname, save_im_name, logo_type, xml_folder, data_mark)  # ########
+        tree = ET.ElementTree(root)
+        tree.write(save_xml_path, encoding="UTF-8", xml_declaration=True)  # 将tree内容写入save_xml_path
+        root = ET.parse(save_xml_path)  # 解析（读取）save_xml_path文件
+        file_lines = minidom.parseString(ET.tostring(root, encoding="Utf-8")).toprettyxml(
+            indent="\t")  # 转多行格式
+        file_line = open(save_xml_path, "w", encoding="utf-8")  # 打开原来的单行格式文件
+        file_line.write(file_lines)  # 将多行内容写入之前的单行文件中（单行文件内容格式化后写入的，之前内容全部消失）
+        file_line.close()
+        if random.random() < 0.7:  # 设置训练数据集的比例
+            in_file_train.write("%06d\n" % number)
+        else:
+            in_file_test.write("%06d\n" % number)
+        # print(u'已合成图片%s，已生成标记文件%s' % (save_im_name, save_xml_name))
+        end = time.time()
+    print(u'logo添加成功———logo添加成功———logo添加成功———已完成%d张,用时%d秒，平均10000张图片用时%d分' % (
+    number, (end - start), (10000 * (end - start)) / number / 60))
     in_file_train.close()
     in_file_test.close()
