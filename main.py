@@ -31,5 +31,5 @@ if not os.path.exists(os.path.join(work_dir, "ImageSets\\Main")):
 if not os.path.exists(os.path.join(work_dir, "JPEGImages")):
     os.makedirs(os.path.join(work_dir, "JPEGImages"))
 
-make_data.go(work_dir, loop=5)
+make_data.go(work_dir, loop=200)
 print("程序执行完成")
