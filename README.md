@@ -1,4 +1,5 @@
 # Making traffic signal data sets
+- 两个函数：main.py 和 yzn_voc_label.py
 ## main.py
 调用make_data.py实现<br>
 函数作用：根据少量的背景和logo图片,合成大量训练需要的数据集。
