@@ -1,10 +1,14 @@
 # -*- coding:utf-8 -*-
-from PIL import Image  # ImageDraw, ImageFont, ImageEnhance
+# ImageDraw, ImageFont, ImageEnhance
+
+
+from PIL import Image, ImageFilter, ImageEnhance
 from lxml import etree as ET
 from xml.dom import minidom
 import os
 import time
 import random
+import numpy
 
 
 # 读取logo分类class.txt文件的每一行内容并存储到列表中， 返回列表
@@ -79,12 +83,16 @@ def edit_xml(xml_fullname, xml_filename, logo_type, xml_folder, data_mark):
 # logo_im_max :需要调的参 logo像素点的大小 最近时
 
 # 给背景图片添加logo,并返回打标数据
-def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='level', k_line=0.31, logo_im_min=25,
+def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='level', k_line=0.31, logo_im_min=60,
              logo_im_max=120):
-    base_im = base_im.resize((1280, 1024))  # 统一改变背景的大小
+    # base_im = base_im.resize((1280, 124))  # 统一改变背景的大小
+    base_im = base_im.resize((1280, 1024))
     base_im_w = base_im.size[0] - random.randint(0, 300)  # 随机改变背景图片的尺寸
     base_im_h = base_im.size[1] - random.randint(0, 200)
-    base_im = base_im.resize((base_im_w, base_im_h))  # 统一改变背景的大小
+    # base_im = base_im.resize((base_im_w, base_im_h))  # 统一改变背景的大小
+    base_im = base_im.crop((random.randint(1, 10), random.randint(1, 10), base_im_w, base_im_h))  # 裁剪图片 改变背景的内容
+    base_im = base_im.resize((1280, 1024))  # 最后输出的图片大小统一成 比赛时需要的数据大小
+
 
     logo_start_x = int(logo_start_x * base_im_w)  # 需要调的参 logo预测起点的x横坐标，常数是宽度比例
     logo_start_y = int(logo_start_y * base_im_h)  # 需要调的参 logo预测起点的y纵坐标， 常数是高度比例
@@ -108,9 +116,9 @@ def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='l
     else:  # direction == 'level'
         logo_x = random.randint(0, base_im_w)  # logo合成定位的横坐标区间范围
         logo_y = random.randint(50, 400)
-        logo_size = random.randint(40, 120)
+        logo_size = random.randint(60, 120)
     if logo_x + logo_size > base_im_w:  # 超出边界就放在边界上
-        logo_x = base_im_w - logo_size
+        logo_x = base_im_w - logo_size - random.randint(0, 20)
         print("0000000000000000000000000000000000000 logo超出右边界")
     if logo_y < 0:
         print("1111111111111111111111111111111111111 logo超出左边界")
@@ -119,6 +127,15 @@ def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='l
     logo_size_x = int(random.uniform(0.9, 1) * logo_size)  # 随机改变logo图片的宽度
     logo_size_y = logo_size
     logo_im = logo_im.resize((logo_size_x, logo_size_y))  # 随机改变logo的x宽度 最大变窄比例是0.9
+    logo_im = ImageEnhance.Color(logo_im).enhance(0.6 + 0.4 * random.random())  # Adjust the saturation
+    logo_im = ImageEnhance.Contrast(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the color
+    logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
+    logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=1 + 0.4 * random.random()))  # 需要对logo进行模糊化处理
+
+    base_im = ImageEnhance.Color(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
+    base_im = ImageEnhance.Contrast(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the contrast
+    base_im = ImageEnhance.Sharpness(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the sharpness
+
     base_im.paste(logo_im, (logo_x, logo_y), logo_im)  # (logo_x, logo_y)坐标是粘贴的坐标, 将logo图片粘贴到背景上去
 
     # 确定打标数据
