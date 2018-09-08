@@ -44,7 +44,7 @@ def txt2dict(logo_class_path):
 # from xml.dom import minidom
 # [base_im_w, base_im_h, logo_x, logo_y, logo_size_x, logo_size_y]
 # 编写xml文件，输入的数据是6个int数值，xml里面只有str类型
-def edit_xml(xml_fullname, xml_filename, logo_type, xml_folder, data_mark):
+def edit_xml(xml_fullname, xml_filename, xml_folder, data_mark):
     root = ET.Element("annotation")
     # root.set("version", "1.0")  # root的属性设置
     folder = ET.SubElement(root, "folder")
@@ -59,34 +59,35 @@ def edit_xml(xml_fullname, xml_filename, logo_type, xml_folder, data_mark):
     owner.text = "YZN"
     size = ET.SubElement(root, "size")
     width = ET.SubElement(size, "width")
-    width.text = str(data_mark[0])
+    width.text = str(data_mark[0][0])
     height = ET.SubElement(size, "height")
-    height.text = str(data_mark[1])
+    height.text = str(data_mark[0][1])
     depth = ET.SubElement(size, "depth")
     depth.text = "3"
     segmented = ET.SubElement(root, "segmented")
     segmented.text = "0"
-    object = ET.SubElement(root, "object")
-    name = ET.SubElement(object, "name")
-    name.text = logo_type[1]  # logo_type[1]添加的是数字类别, logo_type[0]对应的是汉字类别
-    meaning = ET.SubElement(object, "meaning")
-    meaning.text = logo_type[0]  # logo_type[1]添加的是数字类别, logo_type[0]对应的是汉字类别
-    pose = ET.SubElement(object, "pose")
-    pose.text = "Unspecified"
-    truncated = ET.SubElement(object, "truncated")
-    truncated.text = "0"
-    difficult = ET.SubElement(object, "difficult")
-    difficult.text = "0"
-    bndbox = ET.SubElement(object, "bndbox")
-    xmin = ET.SubElement(bndbox, "xmin")
-    xmin.text = str(data_mark[2])
-    ymin = ET.SubElement(bndbox, "ymin")
-    ymin.text = str(data_mark[3])
-    xmax = ET.SubElement(bndbox, "xmax")
-    xmax.text = str(data_mark[2] + data_mark[4])
-    ymax = ET.SubElement(bndbox, "ymax")
-    ymax.text = str(data_mark[3] + data_mark[5])
-    # print(data_mark)  # [1280, 1024, 1122, 121, 94, 99]
+    for i in range(len(data_mark) - 1):
+        object = ET.SubElement(root, "object")
+        name = ET.SubElement(object, "name")
+        name.text = data_mark[i + 1][0][1]  # logo_type[1]添加的是数字类别, logo_type[0]对应的是数字类别
+        meaning = ET.SubElement(object, "meaning")
+        meaning.text = data_mark[i + 1][0][0]  # logo_type[0]添加的是数字类别, logo_type[0]对应的是汉字类别
+        pose = ET.SubElement(object, "pose")
+        pose.text = "Unspecified"
+        truncated = ET.SubElement(object, "truncated")
+        truncated.text = "0"
+        difficult = ET.SubElement(object, "difficult")
+        difficult.text = "0"
+        bndbox = ET.SubElement(object, "bndbox")
+        xmin = ET.SubElement(bndbox, "xmin")
+        xmin.text = str(data_mark[i + 1][1])
+        ymin = ET.SubElement(bndbox, "ymin")
+        ymin.text = str(data_mark[i + 1][2])
+        xmax = ET.SubElement(bndbox, "xmax")
+        xmax.text = str(data_mark[i + 1][1] + data_mark[i + 1][3])
+        ymax = ET.SubElement(bndbox, "ymax")
+        ymax.text = str(data_mark[i + 1][2] + data_mark[i + 1][4])
+
     return root
 
 
@@ -97,9 +98,23 @@ def edit_xml(xml_fullname, xml_filename, logo_type, xml_folder, data_mark):
 # logo_im_min :需要调的参 logo像素点的大小 最远时
 # logo_im_max :需要调的参 logo像素点的大小 最近时
 
+def resize_light(light_im):  # 将light统一最窄宽度# 对light_im 进行处理
+    light_min = 10 + random.randint(1, 20)
+    if (light_im.size[1] < light_im.size[0]):
+        light_im = light_im.resize((int(light_min * light_im.size[0] / light_im.size[1]), light_min))
+    else:
+        light_im = light_im.resize((light_min, int(light_min * light_im.size[1] / light_im.size[0])))
+
+    return light_im
+
+
 # 给背景图片添加logo,并返回打标数据
-def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='level', k_line=0.31, logo_im_min=60,
+def add_logo(base_im, logo_im, light0_im, light1_im, logo_start_x=0.5, logo_start_y=0.31, direction='level',
+             k_line=0.31,
+             logo_im_min=40,
              logo_im_max=120):
+    light0_im = resize_light(light0_im)
+    light1_im = resize_light(light1_im)
     # base_im = base_im.resize((1280, 124))  # 统一改变背景的大小
     base_im = base_im.resize((1280, 1024))
     base_im_w = base_im.size[0] - random.randint(0, 300)  # 随机改变背景图片的尺寸
@@ -128,9 +143,10 @@ def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='l
         logo_size = int(k_logo * (logo_start_x - logo_x)) + logo_im_min  # 根据透视规则写出来的logo图片变化规律，线性变化的，近大远小。
         logo_size += int(random.uniform(-0.5, 0.5) * 10)  # 设置logo大小随机波动， 这里的系数表示大小随机波动的logo的像素幅度
     else:  # direction == 'level'
-        logo_x = random.randint(0, base_im_w)  # logo合成定位的横坐标区间范围
-        logo_y = random.randint(50, 400)
-        logo_size = random.randint(60, 120)
+        logo_x = random.randint(0, base_im_w - logo_im.size[0])  # logo合成定位的横坐标区间范围
+        logo_y = random.randint(100, 450)
+        logo_size = random.randint(40, 120)
+
     if logo_x + logo_size > base_im_w:  # 超出边界就放在边界上
         logo_x = base_im_w - logo_size - random.randint(0, 20)
         print("0000000000000000000000000000000000000 logo超出右边界")
@@ -141,20 +157,39 @@ def add_logo(base_im, logo_im, logo_start_x=0.5, logo_start_y=0.31, direction='l
     logo_size_x = int(random.uniform(0.9, 1) * logo_size)  # 随机改变logo图片的宽度
     logo_size_y = logo_size
     logo_im = logo_im.resize((logo_size_x, logo_size_y))  # 随机改变logo的x宽度 最大变窄比例是0.9
-    logo_im = ImageEnhance.Color(logo_im).enhance(0.6 + 0.4 * random.random())  # Adjust the saturation
+    logo_im = ImageEnhance.Color(logo_im).enhance(0.8 + 0.6 * random.random())  # Adjust the saturation
     logo_im = ImageEnhance.Contrast(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the color
-    logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
-    logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=1 + 0.4 * random.random()))  # 需要对logo进行模糊化处理
+    # logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
+    logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=1.0 + 0.2 * random.random()))  # 需要对logo进行模糊化处理
 
     base_im = ImageEnhance.Color(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
     base_im = ImageEnhance.Contrast(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the contrast
     base_im = ImageEnhance.Sharpness(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the sharpness
+    base_im.paste(logo_im, (logo_x, logo_y), logo_im)  # 粘贴logo (logo_x, logo_y)坐标是粘贴的坐标, 将logo图片粘贴到背景上去
 
-    base_im.paste(logo_im, (logo_x, logo_y), logo_im)  # (logo_x, logo_y)坐标是粘贴的坐标, 将logo图片粘贴到背景上去
+    # if(base_im_w - logo_x >  )
+    light0_x = base_im_w - logo_x
+    light0_y = int(0.5 * base_im_h - logo_y) if (0.5 * base_im_h - logo_y < logo_y) else (
+                logo_y + logo_size_y + random.randint(1, 5))
+    if light0_y < 5:
+        light0_y = random.randint(3, 10)
+    light0_im = ImageEnhance.Color(light0_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
+    # light0_im = ImageEnhance.Contrast(light0_im).enhance(0.8 + 0.5 * random.random())  # Adjust the contrast
+    light0_im = ImageEnhance.Sharpness(light0_im).enhance(0.8 + 0.5 * random.random())  # Adjust the sharpness
+    base_im.paste(light0_im, (light0_x, light0_y))  # 粘贴light0
+
+    light1_x = light0_x + int((2 * random.random() + 1.5) * light0_im.size[0])  # 第二个灯在第一个的右边1.5倍 灯的宽度距离 高度上下4个像素偏移
+    light1_y = light0_y + 2 - random.randint(0, 4)
+    light1_im = ImageEnhance.Color(light1_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
+    # light1_im = ImageEnhance.Contrast(light1_im).enhance(0.8 + 0.5 * random.random())  # Adjust the contrast
+    light1_im = ImageEnhance.Sharpness(light1_im).enhance(0.8 + 0.5 * random.random())  # Adjust the sharpness
+    base_im.paste(light1_im, (light1_x, light1_y))  # 粘贴light1
 
     # 确定打标数据
-    data_mark = [base_im_w, base_im_h, logo_x, logo_y, logo_size_x,
-                 logo_size_y]  # base_im:背景尺寸，  logo_x:logo左上角的定位，logo_size:logo尺寸
+    data_mark = [[base_im_w, base_im_h], [logo_x, logo_y, logo_size_x, logo_size_y],
+                 [light0_x, light0_y, light0_im.size[0], light0_im.size[1]],
+                 [light1_x, light1_y, light1_im.size[0],
+                  light1_im.size[1]]]  # base_im:背景尺寸，  logo_x:logo左上角的定位，logo_size:logo尺寸
     return base_im, data_mark  # 返回添加logo的图片
 
 
@@ -168,6 +203,7 @@ def go(work_dir, loop=5):
         # 分别设置背景图片，logo图片，最后存储图片的文件夹 # 工作路径
         base_dir = os.path.join(work_dir, "before\\base")
         logo_dir = os.path.join(work_dir, "before\\logo")
+        light_dir = os.path.join(work_dir, "before\\light")
         logo_txt_dir = os.path.join(work_dir, "before")
         save_im_dir = os.path.join(work_dir, "JPEGImages")
         save_xml_dir = os.path.join(work_dir, "Annotations")
@@ -180,14 +216,30 @@ def go(work_dir, loop=5):
         base_name = base_list[random.randint(0, len(base_list) - 1)]  # 随机选择一个背景图片
         base_name_first = os.path.splitext(base_name)[0]  # 提取背景图片的文件名（不包含后缀.jpg）
         base_im_path = os.path.join(base_dir, base_name)  # 组成完整的路径：路径加文件名
+
+        light_list = os.listdir(light_dir)  # 获取light 列表
+        light_name = []
+        light_name_first = []
+        light_im_path = []
+        for i in range(2):
+            print(i)
+            light_name.append(light_list[random.randint(0, len(light_list) - 1)])  # 随机选择一个light图片
+            print(light_name)
+            light_name_first.append(os.path.splitext(light_name[i])[0])  # 提取light图片的文件名（不包含后缀.jpg .png）
+            print(light_name_first)
+            light_im_path.append(os.path.join(light_dir, light_name[i]))
+
         logo_name_list = sorted(logo_name_dict.items())  # 将logo的字典信息转化成 列表信息（logo名称（不含后缀）：所属的文件夹）
         logo_name = logo_name_list[random.randint(0, len(list(logo_name_dict))) - 1][0]  # 随机选取一个logo图片
         logo_dir = os.path.join(logo_dir, logo_name_dict[logo_name])
         logo_im_path = os.path.join(logo_dir, logo_name)
-        logo_name_first = os.path.splitext(logo_name)[0]
 
+        logo_name_first = os.path.splitext(logo_name)[0]  # logo前四位是标志编号（同一种标志的编号相同），后四位是标志的版本号
         base_im = Image.open(base_im_path)  # 打开背景图片
         logo_im = Image.open(logo_im_path)  # 打开logo图片
+        light0_im = Image.open(light_im_path[0])  # 打开light图片
+        light1_im = Image.open(light_im_path[1])  # 打开light图片
+
         di = random.random()  # 分配三种方式数量比例
 
         if di < 0.6:
@@ -197,7 +249,7 @@ def go(work_dir, loop=5):
         else:
             direction = "level"
 
-        base_im, data_mark = add_logo(base_im, logo_im, direction=direction)  # 返回图片和用于打标的数据
+        base_im, data_mark = add_logo(base_im, logo_im, light0_im, light1_im, direction=direction)  # 返回图片和用于打标的数据
         number += 1  # 用于统计生成图片的数量，即当前图片的编号
         save_im_name = "%06d.jpg" % number  # 6位整数保存，前面用零补齐
         save_im_path = os.path.join(save_im_dir, save_im_name)
@@ -205,10 +257,19 @@ def go(work_dir, loop=5):
         save_xml_name = "%06d.xml" % number  # 拼凑保存时，XML标记文件的名称
 
         save_xml_path = os.path.join(save_xml_dir, save_xml_name)
-        logo_type = inf_dict[logo_name_first]  # 找到这个编号的logo对应的类型（汉字） ['旅游', '08']
+        logo_type = inf_dict[logo_name_first[:4]]  # 找到这个编号的logo对应的类型（汉字） ['旅游', '08']
+        light_type = []
+        light_type.append(inf_dict[light_name_first[0][:4]])
+        light_type.append(inf_dict[light_name_first[1][:4]])
         xml_folder = os.path.split(logo_dir)[-1]  # 获取当前所在文件夹的名称
-        xml_fullname = base_name_first + '_' + logo_name_first + '.jpg'  # 拼凑保存时，图片文件的名称
-        root = edit_xml(xml_fullname, save_im_name, logo_type, xml_folder, data_mark)  # ########
+        xml_fullname = 'base' + base_name_first + '__' + 'logo' + logo_name_first + '__' + 'light0' + \
+                       light_name_first[0][0] + 'light1' + light_name_first[1][0] + '.jpg'  # 拼凑保存时，图片文件的名称
+        data_mark[1].insert(0, logo_type)
+        print(data_mark)
+        data_mark[2].insert(0, light_type[0])
+        data_mark[3].insert(0, light_type[1])
+        print(data_mark)
+        root = edit_xml(xml_fullname, save_im_name, xml_folder, data_mark)  # ########
         tree = ET.ElementTree(root)
         tree.write(save_xml_path, encoding="UTF-8", xml_declaration=True)  # 将tree内容写入save_xml_path
         root = ET.parse(save_xml_path)  # 解析（读取）save_xml_path文件
@@ -224,6 +285,6 @@ def go(work_dir, loop=5):
         # print(u'已合成图片%s，已生成标记文件%s' % (save_im_name, save_xml_name))
         end = time.time()
     print(u'logo添加成功———logo添加成功———logo添加成功———已完成%d张,用时%d秒，平均10000张图片用时%d分' % (
-    number, (end - start), (10000 * (end - start)) / number / 60))
+        number, (end - start), (10000 * (end - start)) / number / 60))
     in_file_train.close()
     in_file_test.close()
