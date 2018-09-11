@@ -59,9 +59,9 @@ def edit_xml(xml_fullname, xml_filename, xml_folder, data_mark):
     owner.text = "YZN"
     size = ET.SubElement(root, "size")
     width = ET.SubElement(size, "width")
-    width.text = str(data_mark[0][0])
+    width.text = str(1280)  # str(data_mark[0][0])
     height = ET.SubElement(size, "height")
-    height.text = str(data_mark[0][1])
+    height.text = str(1024)  # str(data_mark[0][1])
     depth = ET.SubElement(size, "depth")
     depth.text = "3"
     segmented = ET.SubElement(root, "segmented")
