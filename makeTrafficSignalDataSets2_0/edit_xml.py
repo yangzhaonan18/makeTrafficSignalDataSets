@@ -58,7 +58,7 @@ def edit_xml(work_dir, num, base_path, logo_path, coor, logo_im, inf_value):
     file_line.write(file_lines)  # 将多行内容写入之前的单行文件中（单行文件内容格式化后写入的，之前内容全部消失）
     file_line.close()
     # print(u'已合成图片%s，已生成标记文件%s' % (save_im_name, save_xml_name))
-    return
+    return None
 
 
 if __name__ == "__main__":

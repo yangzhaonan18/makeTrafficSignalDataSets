@@ -9,6 +9,8 @@ def make_folder(work_dir):
         os.makedirs(os.path.join(os.path.join(work_dir, "ImageSets"), "Main"))
     if not os.path.exists(os.path.join(work_dir, "JPEGImages")):
         os.makedirs(os.path.join(work_dir, "JPEGImages"))
+	
+	return None
 
 
 if __name__ == "__main__":
