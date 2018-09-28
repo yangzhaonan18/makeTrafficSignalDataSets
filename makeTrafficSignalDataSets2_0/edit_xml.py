@@ -29,10 +29,10 @@ def edit_xml(work_dir, num, base_path, logo_path, coor, logo_im, inf_value):
     segmented = ET.SubElement(root, "segmented")
     segmented.text = "0"
     object = ET.SubElement(root, "object")
-    name = ET.SubElement(object, "name")
-    name.text = inf_value[1]
-    meaning = ET.SubElement(object, "meaning")
-    meaning.text = inf_value[0]
+    name = ET.SubElement(object, "name")  # number
+    name.text = inf_value[0]
+    # meaning = ET.SubElement(object, "meaning")  # name
+    # meaning.text = inf_value[0]
     pose = ET.SubElement(object, "pose")
     pose.text = "Unspecified"
     truncated = ET.SubElement(object, "truncated")
