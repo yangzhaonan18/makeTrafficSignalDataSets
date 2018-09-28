@@ -29,12 +29,11 @@ def run(work_dir, loop=5):
             print(u'logo添加成功——已完成%d张---用时%d秒 = %d分 = %f小时，已完成比例%f,还需用时%f小时---平均10000张图片用时%d分' % (
                 num, end - start, (end - start) / 60, (end - start) / 3600, num / loop,
                 ((loop - num) * ((end - start) / 3600)) / num, (10000 * (end - start)) / num / 60))
-				
-	return None
+    return None
 
 if __name__ == '__main__':
     # work_dir = os.getcwd()
     work_dir = 'C:\\Users\\young\\Desktop\\test'  # .replace("\\", "/")
     make_folder(work_dir)
-    run(work_dir, loop=50000)
+    run(work_dir, loop=500)
     print("程序执行完成")
