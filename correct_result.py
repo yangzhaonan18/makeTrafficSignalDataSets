@@ -177,7 +177,7 @@ def del_results(results_list, type_list):
     return None
 
 
-def correct_result(result_lists, type_list):
+def correct_result(results_list, type_list):
     # 判断单目标还是多目标：
     print("results_list:", results_list)
     del_results(results_list, type_list)
@@ -307,17 +307,9 @@ if __name__ == "__main__":
         [],
         [],
         [],
-
         []
     ]
-    # print("results_list", )
-    # for i in results_list:
-    #     print(i)
-    # print("len(results_list)", len(results_list), "\n\n")
+
     type_list = find_frequent_obj(results_list)  # find frequent object  type_list [3, 2]
-    # print("type_list is ", type_list)
     correct_result(results_list, type_list)
     edit_xml2(xml_dir, dir, results_list)
-#
-# print(str(15) > str(2))
-# print("15" > "2")
