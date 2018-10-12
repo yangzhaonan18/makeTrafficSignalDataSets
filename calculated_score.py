@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-#
+# Program role: Calculate the score by comparing two XML files
 import os
 import xml.etree.ElementTree as ET2
 

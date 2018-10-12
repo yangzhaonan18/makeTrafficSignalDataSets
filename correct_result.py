@@ -291,4 +291,4 @@ if __name__ == "__main__":
 
     type_list = find_frequent_obj(results_list)  # find frequent object  type_list [3, 2]
     correct_result(results_list, type_list)
-    edit_xml2(xml_dir, dir, results_list)
+    # edit_xml2(xml_dir, dir, results_list)
