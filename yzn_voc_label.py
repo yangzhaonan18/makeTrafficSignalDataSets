@@ -21,7 +21,7 @@ classes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
            "41", "42", "43", "44", "45", "46", "47", "48", "49", "50",
            "51", "52", "53", "54", "55", "56", "57", "58", "59", "60",
            "61", "62", "63", "64", "65", "66", "67", "68", "69", "70",
-           "71", "72" ]  # 类的名称是我们感兴趣的目标对象的名称 如：这里用数字表示，通常填写 bird,car, person之类的词
+           "71", "72"]  # 类的名称是我们感兴趣的目标对象的名称 如：这里用数字表示，通常填写 bird,car, person之类的词
 sets = ["train", "test"]  # 数据
 
 
@@ -68,12 +68,13 @@ for image_set in sets:
         os.makedirs(os.path.join(work_dir, "labels"))  # 新建一个label文件夹。用于存放标记文件txt
 
     os.path
-    image_ids = open(os.path.join(work_dir, "ImageSets\\Main\\%s.txt" % image_set).replace("\\", "/")).read().strip().split()  # 读取编号
-
+    image_ids = open(
+        os.path.join(work_dir, "ImageSets\\Main\\%s.txt" % image_set).replace("\\", "/")).read().strip().split()  # 读取编号
 
     list_file = open(os.path.join(work_dir, "%s.txt" % image_set), 'w')  # train.txt,存放完整路径
     for image_id in image_ids:
-        list_file.write("%s" % os.path.join(work_dir, "JPEGImages/%s.jpg\n" % image_id).replace("/", "\\"))  # 存放训练图片的 完整路径
+        list_file.write(
+            "%s" % os.path.join(work_dir, "JPEGImages/%s.jpg\n" % image_id).replace("/", "\\"))  # 存放训练图片的 完整路径
         convert_annotation(work_dir, image_id)
     list_file.close()
 print("格式装换完成")

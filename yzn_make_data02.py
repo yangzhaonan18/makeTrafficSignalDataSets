@@ -3,7 +3,7 @@
 # from xml.dom import minidom
 
 import os
-import time
+import time, datetime
 # import random
 from make_folder import make_folder
 from get_base import get_base
@@ -29,7 +29,11 @@ def run(work_dir, loop=5):
         edit_txt(work_dir, num)
         if num % 10 == 0 and num != 0:
             end = time.time()
-            print(u'logo添加成功——已完成%d张---用时%d秒 = %d分 = %f小时，已完成比例%f,还需用时%f小时---平均10000张图片用时%d分' % (
+            now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print(
+                "%s:Synthesize %d pictures,Time cost %ds=%dm=%fh,Completed "
+                "ratio=%f,Still need time %f h---Average 10,000 images take %d minutes" % (
+                now_time,
                 num, end - start, (end - start) / 60, (end - start) / 3600, num / loop,
                 ((loop - num) * ((end - start) / 3600)) / num, (10000 * (end - start)) / num / 60))
     return None
@@ -40,4 +44,4 @@ if __name__ == '__main__':
     work_dir = 'C:\\Users\\young\\Desktop\\test'  # .replace("\\", "/")
     make_folder(work_dir)
     run(work_dir, loop=50000)
-    print("程序执行完成")
+    print("Program execution completed")

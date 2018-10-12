@@ -1,5 +1,5 @@
 import os
-import  random
+import random
 
 def edit_txt(work_dir, num):
     save_main_dir = os.path.join(work_dir, "ImageSets/Main")

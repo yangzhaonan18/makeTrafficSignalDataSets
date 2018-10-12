@@ -1,14 +1,15 @@
 # -*- coding:utf-8 -*-
+#
 import os
 import xml.etree.ElementTree as ET2
 
 
-def judgment(r_true, r_test):
+def judgment(r_true, r_test):  #
     """
-    # "判断", r_true, "与", r_test, "是否检测正确:"
-    :param r_true:
-    :param r_test:
-    :return:
+    # Determine if the position is correct
+    :param r_true: Marked real area coordinates
+    :param r_test: Detected area coordinates
+    :return: True is correct
     """
     if r_true[0] == r_test[0]:  # same type
         ox2 = r_test[1] + r_test[3] / 2
@@ -19,6 +20,14 @@ def judgment(r_true, r_test):
 
 
 def calculated_score(result_dict01, result_dict02, n_tp, n_true, n_test):
+    """
+    :param result_dict01: (Marked real area coordinates) The coordinates of all the targets of a video
+    :param result_dict02: (Detected area coordinates ) The coordinates of all the targets of a video
+    :param n_tp: Number of correctly detected
+    :param n_true: Mark the number of tests that need to be detected
+    :param n_test: The number of targets eventually detected
+    :return: n_tp, n_true, n_test
+    """
     for frame in result_dict01:
         # print("GT is ", result_dict01[frame])  # [['2', '1026', '296', '61', '51'], ['3', '1026', '296', '66', '55']]
         # print("Test is ", result_dict02[frame])  # [['2', '1026', '296', '61', '51']]
@@ -29,9 +38,9 @@ def calculated_score(result_dict01, result_dict02, n_tp, n_true, n_test):
             n_test += len(rs_test)
         else:  # When a frame detection does not detect the target
             continue
-        list_true = [0] * len(rs_true)  # 0表示这个目标还没有被成功匹配，成功匹配后设置为1
+        list_true = [0] * len(rs_true)  # 0: target not  successfully matched, 1:successful matching
         list_test = [0] * len(rs_test)
-        # print("检测之前的：")
+        # print("Before testing：")
         # print(list_true)
         # print(list_test)
         flag = 0
@@ -59,8 +68,8 @@ def calculated_score(result_dict01, result_dict02, n_tp, n_true, n_test):
 def get_result_dict(path):
     """
     # Read the information in the xml file and convert it to dictionary storage
-    :param path:
-    :return:
+    :param path: Absolute path
+    :return: result_dict: All target coordinates in the xml file
     """
     tree01 = ET2.parse(path)
     root01 = tree01.getroot()
@@ -82,17 +91,17 @@ def get_result_dict(path):
 
 if __name__ == "__main__":
     """
-    work_dir01：存放的是标准的答案XML文件
-    work_dir02：存放的是提交的答案XML文件
-    同一张图的检测结果必须用和标准答案相同的名称保存
+    The test results of the same image must be saved with the same name as the standard answer.
+    work_dir01：Store the standard answer XML file
+    work_dir02：The submitted answer XML file is stored.
     """
 
     work_dir01 = "C:\\Users\\young\\Desktop\\score01"  # true
     work_dir02 = "C:\\Users\\young\\Desktop\\score02"  # test
     file_list = os.listdir(work_dir01)
-    n_tp = 0  # 正检总数
-    n_true = 0  # 标注真值中所有交通信号总数
-    n_test = 0  # 检测结果中所有交通信号总数
+    n_tp = 0  # Number of correctly detected
+    n_true = 0  # Mark the number of tests that need to be detected
+    n_test = 0  # The number of targets eventually detected
 
     for file in file_list:
         path01 = os.path.join(work_dir01, file)
