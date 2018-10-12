@@ -99,7 +99,7 @@ def edit_xml(xml_fullname, xml_filename, xml_folder, data_mark):
 # logo_im_max :需要调的参 logo像素点的大小 最近时
 
 def resize_light(light_im):  # 将light统一最窄宽度# 对light_im 进行处理
-    light_min = 10 + random.randint(1, 20)
+    light_min = 13 + random.randint(5, 15)
     if (light_im.size[1] < light_im.size[0]):
         light_im = light_im.resize((int(light_min * light_im.size[0] / light_im.size[1]), light_min))
     else:
@@ -160,7 +160,7 @@ def add_logo(base_im, logo_im, light0_im, light1_im, logo_start_x=0.5, logo_star
     logo_im = ImageEnhance.Color(logo_im).enhance(0.8 + 0.6 * random.random())  # Adjust the saturation
     logo_im = ImageEnhance.Contrast(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the color
     # logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
-    logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=1.0 + 0.2 * random.random()))  # 需要对logo进行模糊化处理
+    logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=1.0 + 0.4 * random.random()))  # 需要对logo进行模糊化处理
 
     base_im = ImageEnhance.Color(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
     base_im = ImageEnhance.Contrast(base_im).enhance(0.8 + 0.5 * random.random())  # Adjust the contrast
@@ -170,7 +170,7 @@ def add_logo(base_im, logo_im, light0_im, light1_im, logo_start_x=0.5, logo_star
     # if(base_im_w - logo_x >  )
     light0_x = base_im_w - logo_x
     light0_y = int(0.5 * base_im_h - logo_y) if (0.5 * base_im_h - logo_y < logo_y) else (
-                logo_y + logo_size_y + random.randint(1, 5))
+            logo_y + logo_size_y + random.randint(1, 5))
     if light0_y < 5:
         light0_y = random.randint(3, 10)
     light0_im = ImageEnhance.Color(light0_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
@@ -178,7 +178,7 @@ def add_logo(base_im, logo_im, light0_im, light1_im, logo_start_x=0.5, logo_star
     light0_im = ImageEnhance.Sharpness(light0_im).enhance(0.8 + 0.5 * random.random())  # Adjust the sharpness
     base_im.paste(light0_im, (light0_x, light0_y))  # 粘贴light0
 
-    light1_x = light0_x + int((2 * random.random() + 1.5) * light0_im.size[0])  # 第二个灯在第一个的右边1.5倍 灯的宽度距离 高度上下4个像素偏移
+    light1_x = (light0_x + int((2 * random.random() + 1.5) * light0_im.size[0]))  # 第二个灯在第一个的右边1.5倍 灯的宽度距离 高度上下4个像素偏移
     light1_y = light0_y + 2 - random.randint(0, 4)
     light1_im = ImageEnhance.Color(light1_im).enhance(0.8 + 0.5 * random.random())  # Adjust the color
     # light1_im = ImageEnhance.Contrast(light1_im).enhance(0.8 + 0.5 * random.random())  # Adjust the contrast
@@ -222,11 +222,11 @@ def go(work_dir, loop=5):
         light_name_first = []
         light_im_path = []
         for i in range(2):
-            print(i)
+            # print(i)
             light_name.append(light_list[random.randint(0, len(light_list) - 1)])  # 随机选择一个light图片
-            print(light_name)
+            # print(light_name)
             light_name_first.append(os.path.splitext(light_name[i])[0])  # 提取light图片的文件名（不包含后缀.jpg .png）
-            print(light_name_first)
+            # print(light_name_first)
             light_im_path.append(os.path.join(light_dir, light_name[i]))
 
         logo_name_list = sorted(logo_name_dict.items())  # 将logo的字典信息转化成 列表信息（logo名称（不含后缀）：所属的文件夹）
@@ -265,10 +265,10 @@ def go(work_dir, loop=5):
         xml_fullname = 'base' + base_name_first + '__' + 'logo' + logo_name_first + '__' + 'light0' + \
                        light_name_first[0][0] + 'light1' + light_name_first[1][0] + '.jpg'  # 拼凑保存时，图片文件的名称
         data_mark[1].insert(0, logo_type)
-        print(data_mark)
+        # print(data_mark)
         data_mark[2].insert(0, light_type[0])
         data_mark[3].insert(0, light_type[1])
-        print(data_mark)
+        # print(data_mark)
         root = edit_xml(xml_fullname, save_im_name, xml_folder, data_mark)  # ########
         tree = ET.ElementTree(root)
         tree.write(save_xml_path, encoding="UTF-8", xml_declaration=True)  # 将tree内容写入save_xml_path
@@ -284,7 +284,7 @@ def go(work_dir, loop=5):
             in_file_test.write("%06d\n" % number)
         # print(u'已合成图片%s，已生成标记文件%s' % (save_im_name, save_xml_name))
         end = time.time()
-    print(u'logo添加成功———logo添加成功———logo添加成功———已完成%d张,用时%d秒，平均10000张图片用时%d分' % (
-        number, (end - start), (10000 * (end - start)) / number / 60))
+        print(u'logo添加成功———logo添加成功———logo添加成功———已完成%d张,用时%d秒，平均10000张图片用时%d分' % (
+            number, (end - start), (10000 * (end - start)) / number / 60))
     in_file_train.close()
     in_file_test.close()

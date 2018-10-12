@@ -3,13 +3,15 @@ import xml.etree.ElementTree as ET
 
 
 def test():
-    path = "C:\\Users\\young\\Desktop\\YZN20180901\\Annotations".replace("\\", "/")
+    path = "K:\\YZN20180909\\Annotations".replace("\\", "/")
+    # path = os.getcwd()
     files = os.listdir(path)
-    print(files)
+    # print(files)
     for xmlFile in files:
-        path = "C:\\Users\\young\\Desktop\\YZN20180901\\Annotations".replace("\\", "/")
+        print(xmlFile)
+        path = "K:\\YZN20180909\\Annotations".replace("\\", "/")
         path = os.path.join(path, xmlFile).replace("\\", "/")
-        print(path)
+        # print(path)
         tree = ET.parse(path)
         root = tree.getroot()
         size = root.find('size')

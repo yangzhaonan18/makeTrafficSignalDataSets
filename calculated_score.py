@@ -56,7 +56,6 @@ def calculated_score(result_dict01, result_dict02, n_tp, n_true, n_test):
     return n_tp, n_true, n_test
 
 
-
 def get_result_dict(path):
     """
     # Read the information in the xml file and convert it to dictionary storage

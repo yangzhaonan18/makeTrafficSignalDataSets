@@ -1,4 +1,4 @@
-from PIL import Image, ImageFilter, ImageEnhance
+from PIL import Image, ImageFilter, ImageEnhance, ImageDraw
 import random
 import os
 
@@ -16,7 +16,7 @@ def resize_light(logo_im):
     logo_im = ImageEnhance.Contrast(logo_im).enhance(0.5 + 0.5 * random.random())  # Adjust the color
     # logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
     logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=0.8 + 0.5 * random.random()))  # 需要对logo进行模糊化处理
-    logo_min = 20 + random.randint(0, 30)
+    logo_min = 15 + random.randint(0, 2)
 
     if logo_im.size[0] > logo_im.size[1]:
         logo_im = logo_im.resize((int(logo_min * logo_im.size[0] / logo_im.size[1]), logo_min))
@@ -42,16 +42,17 @@ def resize_sign(logo_im, style):
         logo_w = random.randint(100, 300)
     else:  # square
         logo_w = random.randint(40, 100)
-    logo_im = logo_im.resize((logo_w,  int(logo_w * (logo_im.size[1] / logo_im.size[0]))))
+    logo_im = logo_im.resize((logo_w, int(logo_w * (logo_im.size[1] / logo_im.size[0]))))
     logo_im = logo_im.resize((int(random.uniform(0.9, 1) * logo_im.size[0]),
                               int(random.uniform(0.9, 1) * logo_im.size[1])))
     coor = [random.randint(1, int(1280 - 1.1 * logo_im.size[0])), random.randint(30, 400)]
     return coor, logo_im
 
 
-def add_logo(work_dir, num, base_path, logo_path, base_name, logo_name):
+def add_logo(work_dir, num, base_path, logo_path, other_path, base_name, logo_name):
     base_im = Image.open(base_path)
     logo_im = Image.open(logo_path)
+    other_im = Image.open(other_path)
     base_im = resize_base(base_im)
     if os.path.splitext(logo_name)[0][:1] == str(2):  # light
         coor, logo_im = resize_light(logo_im)
@@ -66,8 +67,21 @@ def add_logo(work_dir, num, base_path, logo_path, base_name, logo_name):
     else:
         coor, logo_im = resize_sign(logo_im, "square")
     base_im.paste(logo_im, (coor[0], coor[1]), logo_im)
+    x = int(1280 / 2 + random.randint(0, 30))
+    y = int(2 * 1024 / 3 + random.randint(10, 200))
+    coor02, other_im = resize_sign(other_im, "ETC")
+    base_im.paste(other_im, (x, y), other_im)
     if (coor[0] + logo_im.size[0]) > 1280 or (coor[1] + logo_im.size[1]) > 1024:
         print("error---error---error---error---error---error---error---error---error---error---error")
+    ImageDraw.Draw(base_im).line([coor[0], coor[1], coor[0], coor[1] + logo_im.size[1]], fill=(255, 0, 0))
+    ImageDraw.Draw(base_im).line([coor[0], coor[1], coor[0] + logo_im.size[0], coor[1]], fill=(255, 0, 0))
+    ImageDraw.Draw(base_im).line(
+        [coor[0] + logo_im.size[0], coor[1], coor[0] + logo_im.size[0], coor[1] + logo_im.size[1]],
+        fill=(255, 0, 0))
+    ImageDraw.Draw(base_im).line(
+        [coor[0], coor[1] + logo_im.size[1], coor[0] + logo_im.size[0], coor[1] + logo_im.size[1]],
+        fill=(255, 0, 0))
+    # base_im.show()
     base_im.save(os.path.join(os.path.join(work_dir, "JPEGImages"), "%06d.jpg" % num))
     return coor, logo_im
 
@@ -76,6 +90,7 @@ if __name__ == "__main__":
     work_dir = 'C:\\Users\\young\\Desktop\\test'
     base_path = "C:\\Users\\young\\Desktop\\test\\before\\base\\0001.jpg"
     logo_path = "C:\\Users\\young\\Desktop\\test\\before\\logo\\1001\\10010001.png"
+    other_path = "C:\\Users\\young\\Desktop\\test\\before\\other\\40150001.png"
     base_name = "0001.jpg"
     logo_name = "10010001.png"
-    add_logo(work_dir, 1, base_path, logo_path, base_name, logo_name)
+    add_logo(work_dir, 1, base_path, logo_path, other_path, base_name, logo_name)

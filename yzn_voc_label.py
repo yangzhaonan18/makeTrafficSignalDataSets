@@ -14,8 +14,14 @@
 import xml.etree.ElementTree as ET
 import os
 
-classes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-           "20"]  # 类的名称是我们感兴趣的目标对象的名称 如：这里用数字表示，通常填写 bird,car, person之类的词
+classes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+           "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+           "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+           "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+           "41", "42", "43", "44", "45", "46", "47", "48", "49", "50",
+           "51", "52", "53", "54", "55", "56", "57", "58", "59", "60",
+           "61", "62", "63", "64", "65", "66", "67", "68", "69", "70",
+           "71", "72" ]  # 类的名称是我们感兴趣的目标对象的名称 如：这里用数字表示，通常填写 bird,car, person之类的词
 sets = ["train", "test"]  # 数据
 
 
@@ -34,8 +40,8 @@ def convert(size, box):  # 内容转换（XML的点坐标格式，转换成YOLO�
 
 
 def convert_annotation(work_dir, image_id):
-    in_file = open(os.path.join(work_dir, "Annotations\\%s.xml" % image_id), 'rb')
-    out_file = open(os.path.join(work_dir, "labels\\%s.txt" % image_id), "w")  # 所有的YOLO打标数据都放在这里
+    in_file = open(os.path.join(work_dir, "Annotations/%s.xml" % image_id), 'rb')
+    out_file = open(os.path.join(work_dir, "labels/%s.txt" % image_id), "w")  # 所有的YOLO打标数据都放在这里
     tree = ET.parse(in_file)
     root = tree.getroot()
     size = root.find('size')  # 读取背景图片的尺寸
@@ -57,12 +63,17 @@ def convert_annotation(work_dir, image_id):
 
 for image_set in sets:
     # work_dir = os.getcwd()  # 运行前这里要修改成自己的目录
-    work_dir = 'C:\\Users\\young\\Desktop\\YZN20180828'
+    work_dir = 'C:\\Users\\young\\Desktop\\YZN20180901'
     if not os.path.exists(os.path.join(work_dir, "labels")):
         os.makedirs(os.path.join(work_dir, "labels"))  # 新建一个label文件夹。用于存放标记文件txt
-    image_ids = open(os.path.join(work_dir, "ImageSets\\Main\\%s.txt" % image_set)).read().strip().split()  # 读取编号
+
+    os.path
+    image_ids = open(os.path.join(work_dir, "ImageSets\\Main\\%s.txt" % image_set).replace("\\", "/")).read().strip().split()  # 读取编号
+
+
     list_file = open(os.path.join(work_dir, "%s.txt" % image_set), 'w')  # train.txt,存放完整路径
     for image_id in image_ids:
-        list_file.write("%s" % os.path.join(work_dir, "JPEGImages\\%s.jpg\n" % image_id))  # 存放训练图片的 完整路径
+        list_file.write("%s" % os.path.join(work_dir, "JPEGImages/%s.jpg\n" % image_id).replace("/", "\\"))  # 存放训练图片的 完整路径
         convert_annotation(work_dir, image_id)
     list_file.close()
+print("格式装换完成")

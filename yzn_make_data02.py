@@ -1,12 +1,14 @@
 # from PIL import Image, ImageFilter, ImageEnhance
 # from lxml import etree as ET
 # from xml.dom import minidom
+
 import os
 import time
 # import random
 from make_folder import make_folder
 from get_base import get_base
 from get_logo import get_logo
+from get_other import get_other
 from get_inf import get_inf
 from add_logo import add_logo
 from edit_xml import edit_xml
@@ -20,8 +22,9 @@ def run(work_dir, loop=5):
         # print(num)
         base_path, base_name = get_base(work_dir)
         logo_path, logo_name = get_logo(work_dir)
+        other_path, other_name = get_other(work_dir)
         # print(logo_path)
-        coor, logo_im = add_logo(work_dir, num, base_path, logo_path, base_name, logo_name)
+        coor, logo_im = add_logo(work_dir, num, base_path, logo_path, other_path, base_name, logo_name)
         edit_xml(work_dir, num, base_path, logo_path, coor, logo_im, inf_dict[os.path.splitext(logo_name)[0][:4]])
         edit_txt(work_dir, num)
         if num % 10 == 0 and num != 0:
@@ -31,9 +34,10 @@ def run(work_dir, loop=5):
                 ((loop - num) * ((end - start) / 3600)) / num, (10000 * (end - start)) / num / 60))
     return None
 
+
 if __name__ == '__main__':
     # work_dir = os.getcwd()
     work_dir = 'C:\\Users\\young\\Desktop\\test'  # .replace("\\", "/")
     make_folder(work_dir)
-    run(work_dir, loop=500)
+    run(work_dir, loop=50000)
     print("程序执行完成")

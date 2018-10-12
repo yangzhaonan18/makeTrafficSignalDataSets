@@ -17,8 +17,8 @@ def edit_txt(work_dir, num):
 
     in_file_train.close()
     in_file_test.close()
-	
-	return None
+
+    return None
 
 
 if __name__ == "__main__":
