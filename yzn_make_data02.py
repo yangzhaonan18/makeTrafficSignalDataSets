@@ -31,11 +31,11 @@ def run(work_dir, loop=5):
             end = time.time()
             now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             print(
-                "%s:Synthesize %d pictures,Time cost %ds=%dm=%fh,Completed "
-                "ratio=%f,Still need time %f h---Average 10,000 images take %d minutes" % (
-                now_time,
+                "%s---Average 10,000 images take %d minutes:Synthesize %d pictures,Time cost %ds=%dm=%fh,Completed "
+                "ratio=%f,Still need time %f h" % (
+                now_time, (10000 * (end - start)) / num / 60,
                 num, end - start, (end - start) / 60, (end - start) / 3600, num / loop,
-                ((loop - num) * ((end - start) / 3600)) / num, (10000 * (end - start)) / num / 60))
+                ((loop - num) * ((end - start) / 3600)) / num))
     return None
 
 

@@ -12,8 +12,8 @@ def resize_base(base_im):
 
 
 def resize_light(logo_im):
-    logo_im = ImageEnhance.Color(logo_im).enhance(0.5 + 0.5 * random.random())  # Adjust the saturation
-    logo_im = ImageEnhance.Contrast(logo_im).enhance(0.5 + 0.5 * random.random())  # Adjust the color
+    logo_im = ImageEnhance.Color(logo_im).enhance(0.6 + 0.4 * random.random())  # Adjust the saturation
+    logo_im = ImageEnhance.Contrast(logo_im).enhance(0.6 + 0.4 * random.random())  # Adjust the color
     # logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
     logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=0.8 + 0.5 * random.random()))  # 需要对logo进行模糊化处理
     logo_min = 15 + random.randint(0, 2)
@@ -30,16 +30,16 @@ def resize_light(logo_im):
 
 
 def resize_sign(logo_im, style):
-    logo_im = ImageEnhance.Color(logo_im).enhance(0.5 + 0.5 * random.random())  # Adjust the saturation
-    logo_im = ImageEnhance.Contrast(logo_im).enhance(0.5 + 0.5 * random.random())  # Adjust the color
+    logo_im = ImageEnhance.Color(logo_im).enhance(0.6 + 0.4 * random.random())  # Adjust the saturation
+    logo_im = ImageEnhance.Contrast(logo_im).enhance(0.6 + 0.4 * random.random())  # Adjust the color
     # logo_im = ImageEnhance.Sharpness(logo_im).enhance(0.7 + 0.3 * random.random())  # Adjust the sharpness
     logo_im = logo_im.filter(ImageFilter.GaussianBlur(radius=1.0 + 0.4 * random.random()))  # 需要对logo进行模糊化处理
     if style == "ETC":
-        logo_w = random.randint(100, 400)
+        logo_w = random.randint(80, 200)
     elif style == "long":
-        logo_w = random.randint(200, 600)
-    elif style == "PorCar":
         logo_w = random.randint(100, 300)
+    elif style == "PorCar":
+        logo_w = random.randint(40, 100)
     else:  # square
         logo_w = random.randint(40, 100)
     logo_im = logo_im.resize((logo_w, int(logo_w * (logo_im.size[1] / logo_im.size[0]))))
@@ -69,18 +69,19 @@ def add_logo(work_dir, num, base_path, logo_path, other_path, base_name, logo_na
     base_im.paste(logo_im, (coor[0], coor[1]), logo_im)
     x = int(1280 / 2 + random.randint(0, 30))
     y = int(2 * 1024 / 3 + random.randint(10, 200))
-    coor02, other_im = resize_sign(other_im, "ETC")
+    coor02, other_im = resize_sign(other_im, "square")
     base_im.paste(other_im, (x, y), other_im)
     if (coor[0] + logo_im.size[0]) > 1280 or (coor[1] + logo_im.size[1]) > 1024:
         print("error---error---error---error---error---error---error---error---error---error---error")
-    ImageDraw.Draw(base_im).line([coor[0], coor[1], coor[0], coor[1] + logo_im.size[1]], fill=(255, 0, 0))
-    ImageDraw.Draw(base_im).line([coor[0], coor[1], coor[0] + logo_im.size[0], coor[1]], fill=(255, 0, 0))
-    ImageDraw.Draw(base_im).line(
-        [coor[0] + logo_im.size[0], coor[1], coor[0] + logo_im.size[0], coor[1] + logo_im.size[1]],
-        fill=(255, 0, 0))
-    ImageDraw.Draw(base_im).line(
-        [coor[0], coor[1] + logo_im.size[1], coor[0] + logo_im.size[0], coor[1] + logo_im.size[1]],
-        fill=(255, 0, 0))
+    # 给打标的区域添加红色边框
+    # ImageDraw.Draw(base_im).line([coor[0], coor[1], coor[0], coor[1] + logo_im.size[1]], fill=(255, 0, 0))
+    # ImageDraw.Draw(base_im).line([coor[0], coor[1], coor[0] + logo_im.size[0], coor[1]], fill=(255, 0, 0))
+    # ImageDraw.Draw(base_im).line(
+    #     [coor[0] + logo_im.size[0], coor[1], coor[0] + logo_im.size[0], coor[1] + logo_im.size[1]],
+    #     fill=(255, 0, 0))
+    # ImageDraw.Draw(base_im).line(
+    #     [coor[0], coor[1] + logo_im.size[1], coor[0] + logo_im.size[0], coor[1] + logo_im.size[1]],
+    #     fill=(255, 0, 0))
     # base_im.show()
     base_im.save(os.path.join(os.path.join(work_dir, "JPEGImages"), "%06d.jpg" % num))
     return coor, logo_im
