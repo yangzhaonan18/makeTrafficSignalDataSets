@@ -41,7 +41,7 @@ def run(work_dir, loop=5):
 
 if __name__ == '__main__':
     # work_dir = os.getcwd()
-    work_dir = 'C:\\Users\\young\\Desktop\\test'  # .replace("\\", "/")
+    work_dir = 'C:\\Users\\young\\Desktop\\test02'  # .replace("\\", "/")
     make_folder(work_dir)
     run(work_dir, loop=50000)
     print("Program execution completed")
