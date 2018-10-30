@@ -54,7 +54,7 @@ while True:
         # 计算质心
         center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
         # 只有当半径大于10时，才执行画图
-        if radius > 10:
+        if radius > 1:
             cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2)
             cv2.circle(frame, center, 5, (0, 0, 255), -1)
             # 把质心添加到pts中，并且是添加到列表左侧
@@ -68,7 +68,13 @@ while True:
         # 画出小线段
         cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
     # res = cv2.bitwise_and(frame, frame, mask=mask)
+
+    dst = cv2.GaussianBlur(frame, (3, 3), 0)  # 高斯消除噪音
+    gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)  # 转成灰色图像
+    # cv2.imshow("gray image", gray)
+    ret, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
     cv2.imshow('Frame', frame)
+    cv2.imshow('binary', binary)
     # 键盘检测，检测到esc键退出
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
@@ -77,3 +83,4 @@ while True:
 camera.release()
 # 销毁所有窗口
 cv2.destroyAllWindows()
+
