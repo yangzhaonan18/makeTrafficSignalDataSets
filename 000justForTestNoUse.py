@@ -36,10 +36,6 @@ import numpy as np
 #     if k == 27:
 #         break
 #
-
-
-i = 9
-j = i
-j = 7
-
-print(j, i)
+contours = [4,5,6,1,3,9]
+contours.sort(key=lambda cnt:  cnt, reverse=True)
+print(contours)

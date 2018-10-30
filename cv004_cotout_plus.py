@@ -24,8 +24,8 @@ def find_mask(frame, color):
     yellowLower = np.array([5, 43, 46])  # 黄色的阈值 标准H：26:34 S:43:255 V:46:255
     yellowUpper = np.array([34, 255, 255])  # 有的图 黄色变成红色的了
 
-    greenLower = np.array([35, 80, 60])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
-    greenUpper = np.array([120, 255, 255])
+    greenLower = np.array([35, 80, 150])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
+    greenUpper = np.array([120, 255, 255])  # V 60 调整到了150
 
     blackLower = np.array([0, 0, 0])  # 黑色的阈值 标准H：0:180 S:0:255 V:0:46
     blackUpper = np.array([180, 250, 255])
@@ -68,23 +68,13 @@ def find_ColorThings(frame, color, num):
     return ColorThings, SomeBinary, contours
 
 
-def print_name(index, solidity, min_s, max_s):
-    index_dict = {0: "<- ", 1: "/|\\", 2: "->", 3: "\|/", 4: ""}
-    if solidity > max_s:
-        name = "circle-%.2f" % solidity
-    elif solidity < min_s:
-        name = "abnormal-%.2f" % solidity
-    else:
-        name = '%s%.2f' % (index_dict[index], solidity)
-    return name
-
 
 def add_line(ColorThings, x, y, radius):
     x = int(x)
     y = int(y)
     x1, x2, y1, y2 = cal_xy(ColorThings, x, y, radius)
     # 画矩形框
-    cv2.circle(ColorThings, (x, y), int(radius), (0, 255, 255), 2)  # 画圆
+    # cv2.circle(ColorThings, (x, y), int(radius), (0, 255, 255), 2)  # 画圆
     # cv2.rectangle(ColorThings, (x1, y1), (x, y), (0, 0, 255), 2)  # 左上
     # cv2.rectangle(ColorThings, (x, y1), (x2, y), (0, 0, 255), 2)  # 右上
     # cv2.rectangle(ColorThings, (x1, y), (x, y2), (0, 0, 255), 2)  # 左下
@@ -104,17 +94,28 @@ def cal_point(SomeBinary, x, y, radius):  # 返回最大方向的编号int
     # print(S01.shape)  # (56, 56)
     # print(S10.shape)  # (56, 56)
     # print(S11.shape)  # (56, 56)
-    up_value = np.sum(S00) + np.sum(S01) - np.sum(S10) - np.sum(S11) if np.sum(S00) + np.sum(S01) > np.sum(
-        S10) + np.sum(S11) else 0
-    down_value = np.sum(S10) + np.sum(S11) - np.sum(S00) - np.sum(S01) if np.sum(S10) + np.sum(S11) > np.sum(
-        S00) + np.sum(S01) else 0
-    right_value = np.sum(S01) + np.sum(S11) - np.sum(S00) - np.sum(S10) if np.sum(S01) + np.sum(S11) > np.sum(
-        S00) + np.sum(S10) else 0
-    left_value = np.sum(S00) + np.sum(S10) - np.sum(S01) - np.sum(S11) if np.sum(S00) + np.sum(S10) > np.sum(
-        S01) + np.sum(S11) else 0
+    SS00 = np.sum(S00)
+    SS01 = np.sum(S01)
+    SS10 = np.sum(S10)
+    SS11 = np.sum(S11)
+
+    up_value = SS00 + SS01
+    down_value = SS10 + SS11
+    right_value = SS01 + SS11
+    left_value = SS00 + SS10
+
     value = [left_value, up_value, right_value, down_value]
-    direct_index = np.argmax(value)
-    return direct_index
+    if SS00 > SS11 and SS10 > SS01:
+        return 1  # left
+    elif SS00 > SS11 and SS01 > SS10:
+        return 2  # 向上
+    elif SS00 < SS11 and SS10 < SS01:
+        return 3  # right
+    elif SS00 < SS11 and SS01 < SS01:
+        return 4
+    else:
+        direct_index = np.argmax(value)
+        return direct_index + 1
 
 
 def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
@@ -123,20 +124,66 @@ def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
     ilter_num = 0
     while solidity > min_s and solidity < max_s and ilter_num < max_item:
         cnts = np.array(contours[0])
+
         for i in range(1, len(contours)):
             cnts = np.insert(cnts, 0, values=contours[i], axis=0)  # 添加其他的点
-        hull = cv2.convexHull(cnts)  # 轮廓转成凸包
-        cv2.polylines(ColorThings, [hull], True, (0, 255, 0), 2)  # 3.绘制凸包
+
+        # hull = cv2.convexHull(cnts)  # 轮廓转成凸包
+        # ColorThings_line = ColorThings
+        # cv2.polylines(ColorThings_line, [hull], True, (0, 0, 255), 2)  # 3.绘制凸包
+        # #
+        # rect = cv2.minAreaRect(cnts)  # 外接矩形
+        # box = cv2.boxPoints(rect)
+        # box = np.int0(box)
+
+        # 拟合直线
+        # cv2.drawContours(ColorThings_line, [box], 0, (0, 0, 255), 2)
+        # rows, cols = ColorThings_line.shape[:2]
+        # [vx, vy, x, y] = cv2.fitLine(cnts, cv2.DIST_L2, 0, 0.01, 0.01)
+        # print("[vx, vy, x, y] :", [vx, vy, x, y])
+        # lefty = int((-x * vy / vx) + y)
+        # righty = int(((cols - x) * vy / vx) + y)
+        # ColorThings_line = cv2.line(ColorThings_line, (cols - 1, righty), (0, lefty), (0, 255, 0), 2)
+        # ColorThings_line = cv2.drawContours(ColorThings_line, contours, -1, (0, 255, 0), 1)  # 画边框
+
         ((x, y), radius) = cv2.minEnclosingCircle(cnts)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
         x = int(x)
         y = int(y)
-        ColorThings_line = add_line(ColorThings, x, y, radius)  # 添加一些划分图形的直线和外接圆
+        # ColorThings_line = add_line(ColorThings_line, x, y, radius)  # 添加一些划分图形的直线和外接圆
         area = cv2.contourArea(cnts)  # 轮廓面积
         hull = cv2.convexHull(cnts)  # 计算出凸包形状(计算边界点)
+
         hull_area = cv2.contourArea(hull)  # 计算凸包面积
         solidity = float(area) / hull_area
+        if solidity > max_s:
+            direct_index = 0
+            break
+        elif solidity < min_s:
+            direct_index = 4
+            # cv2.imshow("%d %fimput image" % (ilter_num, solidity), ColorThings_line)
+            # cv2.waitKey(0)  # ********************************
+            break
+        cnts_ColorThings = ColorThings.copy()
+        hull_ColorThings = ColorThings.copy()
+        # cv2.imshow("image", ColorThings)
+        # cv2.waitKey(0)  # ********************************
+        cnts_ColorThings = cv2.drawContours(cnts_ColorThings, [cnts], -1, (255, 255, 255), -1)
+        # cv2.imshow("image",  cnts_ColorThings)
+        # cv2.waitKey(0)  # ********************************
+        hull_ColorThings = cv2.drawContours(hull_ColorThings, [hull], -1, (255, 255, 255), -1)  #
+
+        print(type(hull_ColorThings))
+        bb = ~cnts_ColorThings & hull_ColorThings & ~ColorThings
+
+        cv2.imshow("image", bb)
+        cv2.waitKey(0)  # ********************************
+        print("ff"*100)
+
+
+
         print("solidity:", solidity)
         print("ilter_num:", ilter_num)
+
         ilter_num += 1
         ColorThings, SomeBinary, contours = find_ColorThings(ColorThings, color, num=ilter_num)
         if len(contours) == 0:
@@ -145,23 +192,25 @@ def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
         direct_index = cal_point(SomeBinary, x, y, radius)
 
         font = cv2.FONT_HERSHEY_SIMPLEX  # 使用默认字体
-        cv2.destroyAllWindows()
-        cv2.putText(ColorThings_line, "%d-%s-%.02f" % (direct_index, ilter_num, solidity), (5, 15), font, 0.5, (0, 0, 255), 1)  # 添加文字
-        cv2.imshow("imput image", ColorThings_line)
-        cv2.waitKey(0)  # ********************************
+        # cv2.destroyAllWindows()
+        index_dict = {0: "circle", 1: "<- ", 2: "/\\", 3: "->", 4: "V"}
+        cv2.putText(ColorThings, "%s %s %.02f" % (index_dict[direct_index], ilter_num, solidity), (5, 20), font, 0.8, (0, 0, 255), 2)  # 添加文字
+        # cv2.imshow("%d %fimput image" % (ilter_num, solidity), BlackThings)
+        # cv2.waitKey(0)  # ********************************
 
-    return ColorThings, direct_index, solidity
+    return direct_index
 
 
 def find_class_name(SquareThings, color):
     ColorThings, _, contours = find_ColorThings(SquareThings, color, num=1)
-    min_s = 0.5
-    max_s = 0.99
+    min_s = 0.7
+    max_s = 0.93
     if len(contours) > 0:
-        ColorThings, direct_index, solidity = judge_index(ColorThings, contours, color, min_s=min_s, max_s=max_s,
-                                                          max_item=55)
-        name = print_name(direct_index, solidity, min_s=min_s, max_s=max_s)
-        print("name:", name)
+        direct_index = judge_index(ColorThings, contours, color, min_s=min_s, max_s=max_s,max_item=55)
+        index_dict = {0: "circle", 1: "<- ", 2: "/\\", 3: "->", 4: "V"}
+        print("direction:"*10, index_dict[direct_index])
+    else:
+        print("NONONOONON0 color %d:", color)
 
 
 def contours_demo(img_path, save_path):
@@ -170,43 +219,51 @@ def contours_demo(img_path, save_path):
     frame = cv2.imread(img_path)
     for color in [0, ]:  # 分别单独处理三个颜色的结果
         SomeThings, _, contours = find_ColorThings(frame, color, num=1)
+        # cv2.imshow("SomeThings", SomeThings)
+        # cv2.waitKey(0)  # ********************************
+
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上？
         #     cv2.drawContours(frame, contours, i, (0, 0, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
         if len(contours) > 0:  # 如果存在轮廓
-            cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
-            ((x, y), radius) = cv2.minEnclosingCircle(cnt_max)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
-            x1, x2, y1, y2 = cal_xy(SomeThings, int(x), int(y), radius)
+            for i in range(0, len(contours)):
 
-            SquareThings01 = SomeThings[y1:y2, x1:x2]  # 裁剪需要的部分
-            SquareThings_resize = cv2.resize(SquareThings01, (200, 200), interpolation=cv2.INTER_CUBIC)
+                # cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
+                contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
+                cnt_max = contours[i]
+                print("type(contours):", type(contours))
+                ((x, y), radius) = cv2.minEnclosingCircle(cnt_max)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
+                x1, x2, y1, y2 = cal_xy(SomeThings, int(x), int(y), radius)
 
-            font = cv2.FONT_HERSHEY_SIMPLEX  # 使用默认字体
+                SquareThings01 = SomeThings[y1:y2, x1:x2]  # 裁剪需要的部分
+                SquareThings_resize = cv2.resize(SquareThings01, (200, 200), interpolation=cv2.INTER_CUBIC)
 
-            # cv2.destroyAllWindows()
-            # cv2.imshow("imput image", SquareThings)
-            # cv2.putText(SquareThings, "imput image", (5, 15), font, 0.5, (0, 0, 255), 1)  # 添加文字，1.2表示字体大小，（0,40）是
-            # cv2.waitKey(0)
-            name = find_class_name(SquareThings_resize, color)
+                font = cv2.FONT_HERSHEY_SIMPLEX  # 使用默认字体
 
-            cv2.putText(SquareThings_resize, name, (1, 15), font, 0.5, (0, 0, 255), 1)  # 添加文字，1.2表示字体大小，（0,40）是
-            cv2.imwrite(save_path, SquareThings_resize)  # 保存修改像素点后的图片
+                # cv2.destroyAllWindows()
+                # cv2.imshow("imput image", SquareThings)
+                # cv2.putText(SquareThings, "imput image", (5, 15), font, 0.5, (0, 0, 255), 1)  # 添加文字，1.2表示字体大小，（0,40）是
+                # cv2.waitKey(0)
+                name = find_class_name(SquareThings_resize, color)
 
-            # SquareThings = cv2.resize(SquareThings, (500, 500), interpolation=cv2.INTER_CUBIC)
-            # cv2.destroyAllWindows()
-            # cv2.imshow(name, SomeThings)
-            # k = cv2.waitKey(0)
-            # if k == 27:
-            #     break
-            # solidity = 0.85
-            num = 1
-            # while solidity > 0.8 and solidity < 0.94 and num < 5:  # 大于0.94的判断为圆形， 小于0.8的为三角形，中间的需要腐蚀处理
+                cv2.putText(SquareThings_resize, name, (1, 15), font, 0.5, (0, 0, 255), 1)  # 添加文字，1.2表示字体大小，（0,40）是
+                cv2.imwrite(save_path, SquareThings_resize)  # 保存修改像素点后的图片
 
-            # cv2.imwrite(save_path, SomeThings)  # 保存修改像素点后的图片
-            # print("type(SomeThings):", type(SomeThings))
-            # # print("type(frame):", type(frame))
-            # print("SomeThings:", SomeThings)
-            # cv2.imwrite(save_path, frame)  # 保存修改像素点后的图片
-            # cv2.imwrite(save_path, dst)  # 保存修改像素点后的图片
+                # SquareThings = cv2.resize(SquareThings, (500, 500), interpolation=cv2.INTER_CUBIC)
+                # cv2.destroyAllWindows()
+                # cv2.imshow(name, SomeThings)
+                # k = cv2.waitKey(0)
+                # if k == 27:
+                #     break
+                # solidity = 0.85
+                # num = 1
+                # while solidity > 0.8 and solidity < 0.94 and num < 5:  # 大于0.94的判断为圆形， 小于0.8的为三角形，中间的需要腐蚀处理
+
+                # cv2.imwrite(save_path, SomeThings)  # 保存修改像素点后的图片
+                # print("type(SomeThings):", type(SomeThings))
+                # # print("type(frame):", type(frame))
+                # print("SomeThings:", SomeThings)
+                # cv2.imwrite(save_path, frame)  # 保存修改像素点后的图片
+                # cv2.imwrite(save_path, dst)  # 保存修改像素点后的图片
 
 
 if __name__ == "__main__":
