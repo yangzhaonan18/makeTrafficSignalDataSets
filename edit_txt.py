@@ -10,7 +10,7 @@ def edit_txt(work_dir, num):
     in_file_train = open(os.path.join(save_main_dir, "train.txt"), style)
     in_file_test = open(os.path.join(save_main_dir, "test.txt"), style)
 
-    if random.random() < 0.8:  # 设置训练数据集的比例
+    if random.random() < 0.95:  # 设置训练数据集的比例
         in_file_train.write("%06d\n" % num)
     else:
         in_file_test.write("%06d\n" % num)

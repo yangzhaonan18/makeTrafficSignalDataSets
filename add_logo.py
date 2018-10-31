@@ -23,8 +23,8 @@ def resize_light(logo_im):
     else:
         logo_im = logo_im.resize((logo_min, int(logo_min * logo_im.size[1] / logo_im.size[0])))
 
-    logo_im = logo_im.resize((int(random.uniform(0.9, 1) * logo_im.size[0]),
-                              int(random.uniform(0.9, 1) * logo_im.size[1])))
+    logo_im = logo_im.resize((int(random.uniform(0.95, 1) * logo_im.size[0]),
+                              int(random.uniform(0.95, 1) * logo_im.size[1])))
     coor = [random.randint(1, int(1280 - 1.1 * logo_im.size[0])), random.randint(1, 350)]
     return coor, logo_im
 
@@ -38,13 +38,13 @@ def resize_sign(logo_im, style):
         logo_w = random.randint(80, 200)
     elif style == "long":
         logo_w = random.randint(50, 250)
-    elif style == "PorCar":
-        logo_w = random.randint(40, 100)
+    # elif style == "PorCar":
+    #     logo_w = random.randint(40, 100)
     else:  # square
         logo_w = random.randint(15, 100)
     logo_im = logo_im.resize((logo_w, int(logo_w * (logo_im.size[1] / logo_im.size[0]))))
-    logo_im = logo_im.resize((int(random.uniform(0.9, 1) * logo_im.size[0]),
-                              int(random.uniform(0.9, 1) * logo_im.size[1])))
+    logo_im = logo_im.resize((int(random.uniform(0.95, 1) * logo_im.size[0]),
+                              int(random.uniform(0.95, 1) * logo_im.size[1])))
     coor = [random.randint(1, int(1280 - 1.1 * logo_im.size[0])), random.randint(30, 400)]
     return coor, logo_im
 
@@ -54,18 +54,18 @@ def add_logo(work_dir, num, base_path, logo_path, other_path, base_name, logo_na
     logo_im = Image.open(logo_path)
     other_im = Image.open(other_path)
     base_im = resize_base(base_im)
-    if os.path.splitext(logo_name)[0][:1] == str(2):  # light
+    if os.path.splitext(logo_name)[0][:4] == str(4001) or os.path.splitext(logo_name)[0][:4] == str(4002):  # light
         coor, logo_im = resize_light(logo_im)
-    elif os.path.splitext(logo_name)[0][:4] == str(1011) or os.path.splitext(logo_name)[0][:4] == str(
-            1012):  # <<<<< and >>>>
+    elif os.path.splitext(logo_name)[0][:4] == str(2002):  # <<<<< and >>>>
         coor, logo_im = resize_sign(logo_im, "long")
-    elif os.path.splitext(logo_name)[0][:4] == str(1014):  # ETC
+    elif os.path.splitext(logo_name)[0][:4] == str(2003):  # ETC
         coor, logo_im = resize_sign(logo_im, "ETC")
-    elif os.path.splitext(logo_name)[0][:4] == str(1009) or os.path.splitext(logo_name)[0][:4] == str(
-            1013):  # car and P
-        coor, logo_im = resize_sign(logo_im, "PorCar")
+    # elif os.path.splitext(logo_name)[0][:4] == str(6009) or os.path.splitext(logo_name)[0][:4] == str(
+    #         6013):  # car and P
+    #     coor, logo_im = resize_sign(logo_im, "PorCar")
     else:
         coor, logo_im = resize_sign(logo_im, "square")
+    # print("logo_name:", logo_name)
     base_im.paste(logo_im, (coor[0], coor[1]), logo_im)
     x = int(1280 / 2 + random.randint(0, 30))
     y = int(2 * 1024 / 3 + random.randint(10, 200))
