@@ -92,7 +92,7 @@
         <counts>
           <entry key="dummy" value="56" />
           <entry key="md" value="125" />
-          <entry key="py" value="15597" />
+          <entry key="py" value="15715" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -100,7 +100,7 @@
         <counts>
           <entry key="Markdown" value="125" />
           <entry key="PLAIN_TEXT" value="56" />
-          <entry key="Python" value="15597" />
+          <entry key="Python" value="15715" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -111,8 +111,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cv004_cotout_plus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="227" column="53" lean-forward="true" selection-end-line="319" />
+            <state relative-caret-position="252">
+              <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
                 <element signature="e#2951#3036#0" />
@@ -120,8 +120,8 @@
                 <element signature="e#4126#7449#0" />
                 <element signature="e#4263#7424#0" />
                 <element signature="e#11760#11822#0" />
-                <marker date="1541084780767" expanded="false" signature="640:967" ph="..." />
-                <marker date="1541084780767" expanded="true" signature="2924:2925" ph="..." />
+                <marker date="1541086824893" expanded="false" signature="640:967" ph="..." />
+                <marker date="1541086824893" expanded="true" signature="2924:2925" ph="..." />
               </folding>
             </state>
           </provider>
@@ -545,6 +545,7 @@
       <configuration name="PythonConfigurationType">
         <watch expression="hings_line = ColorThings&#10;        # cv2.pol" />
         <watch expression="&#10;        # SomeThings = cv2.erode(SomeThings, None, iterations=1)  # 腐蚀操作&#10;        # SomeThings = cv2.dilate(SomeThings, None, iterations=1)  # 膨胀操作，其实" />
+        <watch expression="&quot;red&quot;, " />
       </configuration>
     </watches-manager>
   </component>
@@ -828,8 +829,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cv004_cotout_plus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="227" column="53" lean-forward="true" selection-end-line="319" />
+        <state relative-caret-position="252">
+          <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
           <folding>
             <element signature="e#24#53#0" expanded="true" />
             <element signature="e#2951#3036#0" />
@@ -837,8 +838,8 @@
             <element signature="e#4126#7449#0" />
             <element signature="e#4263#7424#0" />
             <element signature="e#11760#11822#0" />
-            <marker date="1541084780767" expanded="false" signature="640:967" ph="..." />
-            <marker date="1541084780767" expanded="true" signature="2924:2925" ph="..." />
+            <marker date="1541086824893" expanded="false" signature="640:967" ph="..." />
+            <marker date="1541086824893" expanded="true" signature="2924:2925" ph="..." />
           </folding>
         </state>
       </provider>

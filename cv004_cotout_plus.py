@@ -86,9 +86,9 @@ def find_mask(frame, color):
 
 def find_ColorThings(frame, color, num):
     mask = find_mask(frame, color)
-    mask = cv2.erode(mask, None, iterations=num)  # 腐蚀操作
-    mask = cv2.dilate(mask, None, iterations=1)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
 
+    mask = cv2.dilate(mask, None, iterations=1)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
+    mask = cv2.erode(mask, None, iterations=num)  # 腐蚀操作
     ColorThings = cv2.bitwise_and(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
     # an_ColorThings = cv2.bitwise_not(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
     # cv2.imshow("an_ColorThings:", an_ColorThings)
@@ -230,8 +230,8 @@ def contours_demo(img_path, save_path, min_s, max_s):
     mybuffer = 64
     pts = deque(maxlen=mybuffer)
     frame = cv2.imread(img_path)
-    for color in ["black", "red+blue", "red", "blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
-        SomeThings, _, contours = find_ColorThings(frame, color, num=1)
+    for color in ["red",  "blue", "black", "red+blue","green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
+        SomeThings, _, contours = find_ColorThings(frame, color, num=0)
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
         #     cv2.drawContours(SomeThings, contours, i, (255, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
         cv2.imshow("firt SomeThings", SomeThings)
