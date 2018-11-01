@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52863333-ba22-4ef1-82f1-490cbaa593e5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cv004_cotout_plus.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv004_cotout_plus.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -61,7 +60,7 @@
     <session id="-219700314">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.4" value="2" />
@@ -92,7 +91,7 @@
         <counts>
           <entry key="dummy" value="56" />
           <entry key="md" value="125" />
-          <entry key="py" value="15715" />
+          <entry key="py" value="15923" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -100,7 +99,7 @@
         <counts>
           <entry key="Markdown" value="125" />
           <entry key="PLAIN_TEXT" value="56" />
-          <entry key="Python" value="15715" />
+          <entry key="Python" value="15923" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -112,7 +111,7 @@
         <entry file="file://$PROJECT_DIR$/cv004_cotout_plus.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="252">
-              <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
+              <caret line="239" column="78" lean-forward="true" selection-start-line="239" selection-start-column="78" selection-end-line="239" selection-end-column="78" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
                 <element signature="e#2951#3036#0" />
@@ -120,18 +119,9 @@
                 <element signature="e#4126#7449#0" />
                 <element signature="e#4263#7424#0" />
                 <element signature="e#11760#11822#0" />
-                <marker date="1541086824893" expanded="false" signature="640:967" ph="..." />
-                <marker date="1541086824893" expanded="true" signature="2924:2925" ph="..." />
+                <marker date="1541088645326" expanded="false" signature="640:967" ph="..." />
+                <marker date="1541088645326" expanded="true" signature="2924:2925" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1816">
-              <caret line="2472" column="49" lean-forward="true" selection-start-line="2472" selection-start-column="49" selection-end-line="2472" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -514,7 +504,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.12595005" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.28555918" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.28555918" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.33767644" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -830,7 +820,7 @@
     <entry file="file://$PROJECT_DIR$/cv004_cotout_plus.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
-          <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
+          <caret line="239" column="78" lean-forward="true" selection-start-line="239" selection-start-column="78" selection-end-line="239" selection-end-column="78" />
           <folding>
             <element signature="e#24#53#0" expanded="true" />
             <element signature="e#2951#3036#0" />
@@ -838,8 +828,8 @@
             <element signature="e#4126#7449#0" />
             <element signature="e#4263#7424#0" />
             <element signature="e#11760#11822#0" />
-            <marker date="1541086824893" expanded="false" signature="640:967" ph="..." />
-            <marker date="1541086824893" expanded="true" signature="2924:2925" ph="..." />
+            <marker date="1541088645326" expanded="false" signature="640:967" ph="..." />
+            <marker date="1541088645326" expanded="true" signature="2924:2925" ph="..." />
           </folding>
         </state>
       </provider>

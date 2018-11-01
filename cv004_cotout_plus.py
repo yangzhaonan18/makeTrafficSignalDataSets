@@ -232,9 +232,17 @@ def contours_demo(img_path, save_path, min_s, max_s):
     frame = cv2.imread(img_path)
     for color in ["red",  "blue", "black", "red+blue","green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
         SomeThings, _, contours = find_ColorThings(frame, color, num=0)
+        cv2.imshow("firt SomeThings", SomeThings)
+        #
+        # kernel_01 = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 1))   # 直线提取
+        # kernel_02 = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 5))
+        # SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel_01)
+        # SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel_02)
+        # cv2.imshow("opencv-result", SomeThings)
+
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
         #     cv2.drawContours(SomeThings, contours, i, (255, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
-        cv2.imshow("firt SomeThings", SomeThings)
+
         cv2.waitKey(0)  # ********************************
         if 1 == 1:
             break
