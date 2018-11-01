@@ -30,36 +30,54 @@ def cal_xy(frame, x, y, radius):
 
 
 def find_mask(frame, color):
-    redLower01 = np.array([0, 80, 120])  # 红色的阈值 标准H：0-10 and 160-179 S:43:255 V:46:255
-    redUpper01 = np.array([15, 255, 255])
-    redLower02 = np.array([160, 80, 120])
-    redUpper02 = np.array([179, 255, 255])
+    blackLower01 = np.array([0, 0, 0])  # 黑的阈值 标准H：0:180 S:0:255 V:0:46:220
+    blackUpper01 = np.array([180, 255, 90])
+    blackLower02 = np.array([0, 0, 46])  # 灰的阈值 标准H：0:180 S:0:43 V:0:46:220
+    blackUpper02 = np.array([180, 43, 45])  # 灰色基本没用
 
-    yellowLower = np.array([5, 43, 46])  # 黄色的阈值 标准H：26:34 S:43:255 V:46:255
+    redLower01 = np.array([0, 80, 80])  # 红色的阈值 标准H：0-10 and 160-179 S:43:255 V:46:255
+    redUpper01 = np.array([15, 255, 255])
+    redLower02 = np.array([125, 80, 80])  # 125 to 156
+    redUpper02 = np.array([180, 255, 255])
+
+    greenLower = np.array([35, 80, 46])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
+    greenUpper = np.array([99, 255, 255])  # V 60 调整到了150
+
+    blueLower = np.array([100, 80, 80])
+    blueUpper = np.array([124, 255, 255])
+
+    yellowLower = np.array([5, 80, 46])  # 黄色的阈值 标准H：26:34 S:43:255 V:46:255
     yellowUpper = np.array([34, 255, 255])  # 有的图 黄色变成红色的了
 
-    greenLower = np.array([35, 80, 60])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
-    greenUpper = np.array([120, 255, 255])  # V 60 调整到了150
-
-    blackLower = np.array([0, 0, 0])  # 黑色的阈值 标准H：0:180 S:0:255 V:0:46
-    blackUpper = np.array([180, 250, 20])
-
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    r1_mask = cv2.inRange(hsv, redLower01, redUpper01)  # 根据阈值构建掩膜, 红色的两个区域
-    r2_mask = cv2.inRange(hsv, redLower02, redUpper02)
+    red1_mask = cv2.inRange(hsv, redLower01, redUpper01)  # 根据阈值构建掩膜, 红色的两个区域
+    red2_mask = cv2.inRange(hsv, redLower02, redUpper02)
+    red_mask = red1_mask + red2_mask
 
-    r_mask = r1_mask + r2_mask
-    y_mask = cv2.inRange(hsv, yellowLower, yellowUpper)  # 根据阈值构建掩膜, 黄色的区域
-    g_mask = cv2.inRange(hsv, greenLower, greenUpper)  # 根据阈值构建掩膜, 绿色的区域
-    b_mask = cv2.inRange(hsv, blackLower, blackUpper)  # 根据阈值构建掩膜,黑色的区域
-    if color == 0:
-        mask = r_mask
-    elif color == 1:
-        mask = y_mask
-    elif color == 2:
-        mask = g_mask
-    elif color == 3:
-        mask = b_mask
+    black01_mask = cv2.inRange(hsv, blackLower01, blackUpper01)  # 根据阈值构建掩膜,黑色的区域
+    black02_mask = cv2.inRange(hsv, blackLower02, blackUpper02)  # 根据阈值构建掩膜,黑色的区域
+    black_mask = black01_mask + black02_mask
+
+    yellow_mask = cv2.inRange(hsv, yellowLower, yellowUpper)  # 根据阈值构建掩膜, 黄色的区域
+    green_mask = cv2.inRange(hsv, greenLower, greenUpper)  # 根据阈值构建掩膜, 绿色的区域
+
+    blue_mask = cv2.inRange(hsv, blueLower, blueUpper)
+    if color == "black":
+        mask = black_mask
+    elif color == "yellow":
+        mask = yellow_mask
+    elif color == "red":
+        mask = red_mask
+    elif color == "green":
+        mask = green_mask
+    elif color == "blue":
+        mask = blue_mask
+    elif color == "red+blue":
+        mask = red_mask + blue_mask
+    elif color == "green+yellow":
+        mask = green_mask + yellow_mask
+
+
     else:
         mask = None
     return mask
@@ -70,14 +88,19 @@ def find_ColorThings(frame, color, num):
     mask = find_mask(frame, color)
     mask = cv2.erode(mask, None, iterations=num)  # 腐蚀操作
     mask = cv2.dilate(mask, None, iterations=1)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
+
     ColorThings = cv2.bitwise_and(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
+    # an_ColorThings = cv2.bitwise_not(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
+    # cv2.imshow("an_ColorThings:", an_ColorThings)
+    # cv2.waitKey(0)  # ********************************
+
     # cv2.imshow("%d SomeThings:1R2G3B" % k, SomeThings)  # 显示感兴趣的颜色区域
 
     dst = cv2.GaussianBlur(ColorThings, (5, 5), 0)  # 高斯消除噪音
     gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)  # 转成灰色图像
     # cv2.imshow("gray image", gray)
 
-    ret, SomeBinary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
+    ret, SomeBinary = cv2.threshold(gray, 125, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
     # cloneImage, contours, heriachy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # 边界不是封闭的
     cloneImage, contours, heriachy = cv2.findContours(SomeBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
     return ColorThings, SomeBinary, contours
@@ -207,10 +230,14 @@ def contours_demo(img_path, save_path, min_s, max_s):
     mybuffer = 64
     pts = deque(maxlen=mybuffer)
     frame = cv2.imread(img_path)
-    for color in [2, 0, 1]:  # 分别单独处理三个颜色的结果
+    for color in ["black", "red+blue", "red", "blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
         SomeThings, _, contours = find_ColorThings(frame, color, num=1)
+        # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
+        #     cv2.drawContours(SomeThings, contours, i, (255, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
         cv2.imshow("firt SomeThings", SomeThings)
         cv2.waitKey(0)  # ********************************
+        if 1 == 1:
+            break
         contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
         # cv2.imshow("SomeThings", SomeThings)
         # cv2.waitKey(0)  # ********************************
