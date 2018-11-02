@@ -160,7 +160,7 @@ def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
         # box = np.int0(box)
         # cv2.drawContours(ColorThings_line, [box], 0, (0, 0, 255), 2)   # 画外接矩形
 
-        rows, cols = ColorThings_line.shape[:2]  # 拟合直线
+        rows, cols = ColorThings_line.shape[:2]
         [vx, vy, x, y] = cv2.fitLine(cnts, cv2.DIST_L2, 0, 0.01, 0.01)
         # print("[vx, vy, x, y] :", [vx, vy, x, y])
         lefty = int((-x * vy / vx) + y)

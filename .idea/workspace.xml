@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52863333-ba22-4ef1-82f1-490cbaa593e5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/000justForTestNoUse.py" beforeDir="false" afterPath="$PROJECT_DIR$/000justForTestNoUse.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/002just.py" beforeDir="false" afterPath="$PROJECT_DIR$/002just.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cv004_DT_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv004_DT_main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cv005_DT_Plus.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv005_DT_Plus.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -76,7 +78,7 @@
         <counts>
           <entry key="gitignore" value="1" />
           <entry key="md" value="3" />
-          <entry key="py" value="133" />
+          <entry key="py" value="134" />
           <entry key="xml" value="7" />
         </counts>
       </usages-collector>
@@ -84,7 +86,7 @@
         <counts>
           <entry key="Markdown" value="3" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="133" />
+          <entry key="Python" value="134" />
           <entry key="XML" value="7" />
         </counts>
       </usages-collector>
@@ -92,7 +94,7 @@
         <counts>
           <entry key="dummy" value="64" />
           <entry key="md" value="125" />
-          <entry key="py" value="20286" />
+          <entry key="py" value="21740" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -100,7 +102,7 @@
         <counts>
           <entry key="Markdown" value="125" />
           <entry key="PLAIN_TEXT" value="64" />
-          <entry key="Python" value="20286" />
+          <entry key="Python" value="21740" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -111,8 +113,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cv004_DT_main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="160" column="80" selection-start-line="159" selection-start-column="7" selection-end-line="160" selection-end-column="80" />
+            <state relative-caret-position="342">
+              <caret line="162" column="47" lean-forward="true" selection-start-line="162" selection-start-column="47" selection-end-line="162" selection-end-column="47" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
                 <element signature="e#156#604#0" />
@@ -120,9 +122,9 @@
                 <element signature="e#1000#2921#0" />
                 <element signature="e#3225#3310#0" />
                 <element signature="e#12672#14319#0" />
-                <marker date="1541134651582" expanded="false" signature="110:112" ph="..." />
-                <marker date="1541134651582" expanded="false" signature="641:968" ph="..." />
-                <marker date="1541134651582" expanded="true" signature="2925:2926" ph="..." />
+                <marker date="1541174317450" expanded="false" signature="110:112" ph="..." />
+                <marker date="1541174317450" expanded="false" signature="641:968" ph="..." />
+                <marker date="1541174317450" expanded="true" signature="2925:2926" ph="..." />
               </folding>
             </state>
           </provider>
@@ -131,28 +133,37 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="39" column="11" lean-forward="true" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
+            <state relative-caret-position="427">
+              <caret line="35" column="35" lean-forward="true" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="35" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
+                <element signature="e#123#190#0" />
                 <element signature="e#157#925#0" />
-                <element signature="e#1212#1259#1" />
-                <element signature="e#962#1038#0" />
-                <element signature="e#1517#1566#0" />
+                <element signature="e#3112#3943#0" />
                 <element signature="e#918#981#0" />
-                <element signature="e#171#3494#0" />
                 <element signature="e#155#696#0" />
+                <element signature="e#134#453#0" />
                 <element signature="e#142#590#0" />
                 <element signature="e#131#2052#0" />
                 <element signature="e#141#1208#0" />
                 <element signature="e#396#481#0" />
-                <marker date="1541163236128" expanded="true" signature="1647:1670" ph="..." />
-                <marker date="1541163236128" expanded="false" signature="2534:2769" ph="..." />
-                <marker date="1541163236128" expanded="true" signature="2835:3644" ph="..." />
-                <marker date="1541163236128" expanded="true" signature="3728:4014" ph="..." />
-                <marker date="1541163236128" expanded="false" signature="4169:4170" ph="..." />
-                <marker date="1541163236128" expanded="true" signature="9067:9068" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="133:134" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="133:138" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="2542:2566" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="3431:3665" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="3692:4675" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="4808:5465" ph="..." />
+                <marker date="1541177736707" expanded="true" signature="10526:10527" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="202">
+              <caret line="4710" column="12" selection-start-line="4710" selection-start-column="12" selection-end-line="4710" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -162,15 +173,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="403">
               <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cv001_face_recognition.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -205,11 +207,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/000justForTestNoUse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3071">
-              <caret line="138" column="50" selection-start-line="138" selection-start-column="50" selection-end-line="138" selection-end-column="50" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="50">
+              <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -217,8 +216,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/002just.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+            <state relative-caret-position="350">
+              <caret line="14" column="44" lean-forward="true" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -250,9 +249,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>max</find>
-      <find>index_dict</find>
-      <find>waitKey(0)</find>
       <find>while</find>
       <find>255</find>
       <find>(0)</find>
@@ -272,14 +268,17 @@
       <find>圆</find>
       <find>min_</find>
       <find>腐蚀</find>
-      <find>轮廓</find>
       <find>cal_point</find>
       <find>面积</find>
-      <find>矩形</find>
       <find>直线</find>
       <find>BoxPoints</find>
       <find>CropThing</find>
       <find>裁剪</find>
+      <find>轮毂</find>
+      <find>轮廓</find>
+      <find>0</find>
+      <find>cv2.wai</find>
+      <find>矩形</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -332,10 +331,10 @@
         <option value="$PROJECT_DIR$/cv003_cutout.py" />
         <option value="$PROJECT_DIR$/yzn_make_data02.py" />
         <option value="$PROJECT_DIR$/edit_txt.py" />
-        <option value="$PROJECT_DIR$/000justForTestNoUse.py" />
         <option value="$PROJECT_DIR$/add_logo.py" />
         <option value="$PROJECT_DIR$/001just.py" />
         <option value="$PROJECT_DIR$/cv004_cotout_plus.py" />
+        <option value="$PROJECT_DIR$/000justForTestNoUse.py" />
         <option value="$PROJECT_DIR$/cv004_DT_main.py" />
         <option value="$PROJECT_DIR$/002just.py" />
         <option value="$PROJECT_DIR$/cv005_DT_Plus.py" />
@@ -397,7 +396,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.cv005_DT_Plus">
-    <configuration name="001just" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="000justForTestNoUse" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myTSdataset" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -409,7 +408,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/001just.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/000justForTestNoUse.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -570,18 +569,18 @@
       <item itemvalue="Python.1005" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.cv004_cotout_plus" />
-      <item itemvalue="Python.001just" />
       <item itemvalue="Python.cv005_DT_Plus" />
       <item itemvalue="Python.cv004_DT_main" />
       <item itemvalue="Python.002just" />
+      <item itemvalue="Python.000justForTestNoUse" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.cv005_DT_Plus" />
         <item itemvalue="Python.002just" />
+        <item itemvalue="Python.000justForTestNoUse" />
         <item itemvalue="Python.cv004_DT_main" />
         <item itemvalue="Python.cv004_cotout_plus" />
-        <item itemvalue="Python.001just" />
       </list>
     </recent_temporary>
   </component>
@@ -611,6 +610,25 @@
     <frame x="-8" y="32" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49848023" visible="true" weight="0.20179136" />
+      <window_info id="Structure" order="1" sideWeight="0.50151974" side_tool="true" weight="0.20179136" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.12595005" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.28555918" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.33767644" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32899022" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32899022" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32899022" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32899022" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+    <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20179136" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -628,7 +646,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -860,45 +878,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1816">
-          <caret line="2472" column="49" lean-forward="true" selection-start-line="2472" selection-start-column="49" selection-end-line="2472" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/000justForTestNoUse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3071">
-          <caret line="138" column="50" selection-start-line="138" selection-start-column="50" selection-end-line="138" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cv001_face_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="400">
           <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cv004_DT_main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="160" column="80" selection-start-line="159" selection-start-column="7" selection-end-line="160" selection-end-column="80" />
-          <folding>
-            <element signature="e#24#53#0" expanded="true" />
-            <element signature="e#156#604#0" />
-            <element signature="e#645#964#0" />
-            <element signature="e#1000#2921#0" />
-            <element signature="e#3225#3310#0" />
-            <element signature="e#12672#14319#0" />
-            <marker date="1541134651582" expanded="false" signature="110:112" ph="..." />
-            <marker date="1541134651582" expanded="false" signature="641:968" ph="..." />
-            <marker date="1541134651582" expanded="true" signature="2925:2926" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -923,6 +906,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/add_GT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/001just.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -933,17 +923,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/add_GT.py">
+    <entry file="file://$PROJECT_DIR$/000justForTestNoUse.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+        <state relative-caret-position="50">
+          <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="4710" column="12" selection-start-line="4710" selection-start-column="12" selection-end-line="4710" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cv004_DT_main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="162" column="47" lean-forward="true" selection-start-line="162" selection-start-column="47" selection-end-line="162" selection-end-column="47" />
+          <folding>
+            <element signature="e#24#53#0" expanded="true" />
+            <element signature="e#156#604#0" />
+            <element signature="e#645#964#0" />
+            <element signature="e#1000#2921#0" />
+            <element signature="e#3225#3310#0" />
+            <element signature="e#12672#14319#0" />
+            <marker date="1541174317450" expanded="false" signature="110:112" ph="..." />
+            <marker date="1541174317450" expanded="false" signature="641:968" ph="..." />
+            <marker date="1541174317450" expanded="true" signature="2925:2926" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/002just.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        <state relative-caret-position="350">
+          <caret line="14" column="44" lean-forward="true" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -952,27 +967,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="39" column="11" lean-forward="true" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
+        <state relative-caret-position="427">
+          <caret line="35" column="35" lean-forward="true" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="35" />
           <folding>
             <element signature="e#24#53#0" expanded="true" />
+            <element signature="e#123#190#0" />
             <element signature="e#157#925#0" />
-            <element signature="e#1212#1259#1" />
-            <element signature="e#962#1038#0" />
-            <element signature="e#1517#1566#0" />
+            <element signature="e#3112#3943#0" />
             <element signature="e#918#981#0" />
-            <element signature="e#171#3494#0" />
             <element signature="e#155#696#0" />
+            <element signature="e#134#453#0" />
             <element signature="e#142#590#0" />
             <element signature="e#131#2052#0" />
             <element signature="e#141#1208#0" />
             <element signature="e#396#481#0" />
-            <marker date="1541163236128" expanded="true" signature="1647:1670" ph="..." />
-            <marker date="1541163236128" expanded="false" signature="2534:2769" ph="..." />
-            <marker date="1541163236128" expanded="true" signature="2835:3644" ph="..." />
-            <marker date="1541163236128" expanded="true" signature="3728:4014" ph="..." />
-            <marker date="1541163236128" expanded="false" signature="4169:4170" ph="..." />
-            <marker date="1541163236128" expanded="true" signature="9067:9068" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="133:134" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="133:138" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="2542:2566" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="3431:3665" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="3692:4675" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="4808:5465" ph="..." />
+            <marker date="1541177736707" expanded="true" signature="10526:10527" ph="..." />
           </folding>
         </state>
       </provider>
