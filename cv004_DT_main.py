@@ -8,6 +8,7 @@ import random
 
 
 
+
 def add_line(ColorThings, x, y, radius):
     x = int(x)
     y = int(y)
@@ -90,6 +91,10 @@ def find_ColorThings(frame, color, num):
     mask = cv2.dilate(mask, None, iterations=1)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
     mask = cv2.erode(mask, None, iterations=num)  # 腐蚀操作
     ColorThings = cv2.bitwise_and(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
+
+
+
+
     # an_ColorThings = cv2.bitwise_not(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
     # cv2.imshow("an_ColorThings:", an_ColorThings)
     # cv2.waitKey(0)  # ********************************
@@ -155,7 +160,7 @@ def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
         # box = np.int0(box)
         # cv2.drawContours(ColorThings_line, [box], 0, (0, 0, 255), 2)   # 画外接矩形
 
-        rows, cols = ColorThings_line.shape[:2]
+        rows, cols = ColorThings_line.shape[:2]  # 拟合直线
         [vx, vy, x, y] = cv2.fitLine(cnts, cv2.DIST_L2, 0, 0.01, 0.01)
         # print("[vx, vy, x, y] :", [vx, vy, x, y])
         lefty = int((-x * vy / vx) + y)
@@ -225,27 +230,26 @@ def find_class_name(SquareThings, color, min_s, max_s):
         return "NONONOONON0 color %d:" % color
 
 
-def contours_demo(img_path, save_path, min_s, max_s):
+def find_obj(img_path, save_path, min_s, max_s):
     ans = None
     mybuffer = 64
     pts = deque(maxlen=mybuffer)
     frame = cv2.imread(img_path)
-    for color in ["red",  "blue", "black", "red+blue","green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
-        SomeThings, _, contours = find_ColorThings(frame, color, num=0)
+    for color in ["red",  "blue", "black", "red+blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
+        SomeThings, SomeBinary, contours = find_ColorThings(frame, color, num=0)  # num = 腐蚀的次数
         cv2.imshow("firt SomeThings", SomeThings)
+        # cv2.imshow("firt SomeBinary", SomeBinary)
         #
-        # kernel_01 = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 1))   # 直线提取
-        # kernel_02 = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 5))
-        # SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel_01)
-        # SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel_02)
-        # cv2.imshow("opencv-result", SomeThings)
+        # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
+        # ColorThings_er = cv2.morphologyEx(ColorThings, cv2.MORPH_OPEN, kernel)
+        # cv2.imshow("line-result", ColorThings_er)
 
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
         #     cv2.drawContours(SomeThings, contours, i, (255, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
 
-        cv2.waitKey(0)  # ********************************
-        if 1 == 1:
-            break
+        # cv2.waitKey(0)  # ********************************
+        # if 1 == 1:
+        #     break
         contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
         # cv2.imshow("SomeThings", SomeThings)
         # cv2.waitKey(0)  # ********************************
@@ -295,6 +299,59 @@ def contours_demo(img_path, save_path, min_s, max_s):
         return "no one"
 
 
+
+
+def watershed(img_path):
+    ColorThings = cv2.imread(img_path)
+    ColorThings, SomeBinary, contours = find_ColorThings(ColorThings, "red", 0)
+    print(ColorThings.shape)
+    blurred = cv2.pyrMeanShiftFiltering(ColorThings, 10, 100)
+    gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+    ret, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    # cv2.imshow("~binary image:", ~binary)
+
+
+
+    binary = ~binary.copy()
+
+
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    mb = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=2)
+
+    sure_bg = cv2.dilate(mb, kernel, iterations=3)
+    cv2.imshow("mor-opt:", sure_bg)
+
+    circles = cv2.HoughCircles(sure_bg, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=0, maxRadius=0)
+    circles = np.uint8(np.around(circles))
+    for i in circles[0, :]:
+        cv2.circle(ColorThings, (i[0], i[1]), i[2], (0, 0, 255), 2)
+        cv2.circle(ColorThings, (i[0], i[1]), 2, (255, 0, 0), 2)
+    cv2.imshow("circle", circles)
+
+    dist = cv2.distanceTransform(mb, cv2.DIST_L2, 3)
+    dist_output = cv2.normalize(dist, 0, 1.0, cv2.NORM_MINMAX)
+    cv2.imshow("distance-t", dist_output*50)
+
+    ret, surface = cv2.threshold(dist, 1, dist.max()*0.9, cv2.THRESH_BINARY)
+    cv2.imshow("surface-bin", surface)
+
+    surface_fg = np.uint8(surface)
+    unknown = cv2.subtract(sure_bg, surface_fg)
+    ret, markers = cv2.connectedComponents(surface_fg)
+    print("ret", ret, )
+
+    markers = markers + 1
+    markers[unknown == 255] = 0
+    markers = cv2.watershed(ColorThings, markers=markers)
+    ColorThings[markers == -1] = [0, 0, 255]
+    cv2.imshow("result:", ColorThings)
+
+
+
+
+
+
 if __name__ == "__main__":
     print("*************** Python ********")
     # img_path = 'C:\\Users\\young\\Desktop\\just\\2001 (315).png'
@@ -309,13 +366,17 @@ if __name__ == "__main__":
     img_dir = os.path.join(work_dir, img_dir)
     save_dir = os.path.join(work_dir, save_dir)
     img_list = os.listdir(img_dir)
+
+
+
     for img in img_list:
         img_path = os.path.join(img_dir, img)
         save_name = os.path.splitext(img)[0] + ".png"
         save_path = os.path.join(save_dir, save_name)
         # 处理每一张图片并保存
         print("\n A nem img,img_path :%s" % img_path)
-        ans = contours_demo(img_path, save_path, min_s=0.7, max_s=0.93)
+        # watershed(img_path)
+        ans = find_obj(img_path, save_path, min_s=0.7, max_s=0.93)
         print("ans")
 
     # src = cv2.imread(img_path)
@@ -325,3 +386,5 @@ if __name__ == "__main__":
     print("Finish")
     #
     # cv2.destroyAllWindows()
+
+
