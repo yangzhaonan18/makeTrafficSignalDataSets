@@ -59,17 +59,17 @@ def Crop_cnt(frame, cnt):  # 裁剪轮廓凸包
     y3 = box[3][1] - cy1
     w = box[2][0] - box[1][0]
     h = box[0][1] - box[1][1]
-    print(x0, x1, x2, x3, y0, y1, y2, y3 )
-    rat = 1  # 调整比例  利用三个坐标点透视变换
+    print(x0, x1, x2, x3, y0, y1, y2, y3)
+    rat = 1  # 缩放比例  利用三个坐标点透视变换
     pts1 = np.float32([[x1, y1], [x0, y0], [x2, y2]])
     pts2 = np.float32([[0, 0], [0, int(h * rat)], [int(w * rat), 0]])
     print("pts1, pts2", pts1, pts2)
     print("(int(w * rat), int(h * rat)):", (int(w * rat), int(h * rat)))
     M = cv2.getAffineTransform(pts1, pts2)
+
+    CropThing = cv2.warpAffine(CropThing, M, (int(w * rat), int(h * rat)))  # 纠正倾斜后的裁剪后图形
     cv2.imshow("warpAffine", CropThing)
     cv2.waitKey(0)
-    CropThing = cv2.warpAffine(CropThing, M, (int(w * rat), int(h * rat)))  # 纠正倾斜后的裁剪后图形
-
 
 
     # 这里需要将外接倾斜矩形 纠正成水平的（投影变换）
@@ -382,9 +382,11 @@ def contours_demo(img_path, save_path, min_s, max_s):
     mybuffer = 64
     pts = deque(maxlen=mybuffer)
     frame = cv2.imread(img_path)
+    frame = cv2.pyrMeanShiftFiltering(frame, 15, 15)
     # for color in ["red",  "blue", "black", "red+blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
     for color in ["red"]:  # 分别单独处理三个颜色的结果
         SomeThings, SomeBinary, contours = find_ColorThings(frame, color, num=0)  # num = 腐蚀的次数
+        # SomeThings = cv2.pyrMeanShiftFiltering( SomeThings, 15, 15)
 
         # cv2.imshow("firt SomeThings", SomeThings)
         #
