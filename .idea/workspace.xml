@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52863333-ba22-4ef1-82f1-490cbaa593e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/002just.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cv005_DT_Plus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cv004_cotout_plus.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv004_DT_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/002just.py" beforeDir="false" afterPath="$PROJECT_DIR$/002just.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cv005_DT_Plus.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv005_DT_Plus.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +76,7 @@
         <counts>
           <entry key="gitignore" value="1" />
           <entry key="md" value="3" />
-          <entry key="py" value="131" />
+          <entry key="py" value="133" />
           <entry key="xml" value="7" />
         </counts>
       </usages-collector>
@@ -86,7 +84,7 @@
         <counts>
           <entry key="Markdown" value="3" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="131" />
+          <entry key="Python" value="133" />
           <entry key="XML" value="7" />
         </counts>
       </usages-collector>
@@ -94,7 +92,7 @@
         <counts>
           <entry key="dummy" value="64" />
           <entry key="md" value="125" />
-          <entry key="py" value="18615" />
+          <entry key="py" value="20286" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -102,7 +100,7 @@
         <counts>
           <entry key="Markdown" value="125" />
           <entry key="PLAIN_TEXT" value="64" />
-          <entry key="Python" value="18615" />
+          <entry key="Python" value="20286" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -114,7 +112,7 @@
         <entry file="file://$PROJECT_DIR$/cv004_DT_main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="292">
-              <caret line="160" column="80" lean-forward="true" selection-start-line="159" selection-start-column="7" selection-end-line="160" selection-end-column="80" />
+              <caret line="160" column="80" selection-start-line="159" selection-start-column="7" selection-end-line="160" selection-end-column="80" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
                 <element signature="e#156#604#0" />
@@ -133,22 +131,37 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+            <state relative-caret-position="292">
+              <caret line="39" column="11" lean-forward="true" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
-                <element signature="e#158#981#0" />
+                <element signature="e#157#925#0" />
+                <element signature="e#1212#1259#1" />
+                <element signature="e#962#1038#0" />
+                <element signature="e#1517#1566#0" />
+                <element signature="e#918#981#0" />
                 <element signature="e#171#3494#0" />
                 <element signature="e#155#696#0" />
-                <element signature="e#134#453#0" />
+                <element signature="e#142#590#0" />
                 <element signature="e#131#2052#0" />
                 <element signature="e#141#1208#0" />
                 <element signature="e#396#481#0" />
-                <marker date="1541139214640" expanded="true" signature="964:1034" ph="..." />
-                <marker date="1541139214640" expanded="true" signature="1054:1863" ph="..." />
-                <marker date="1541139214640" expanded="true" signature="1947:2141" ph="..." />
-                <marker date="1541139214640" expanded="true" signature="2295:2297" ph="..." />
+                <marker date="1541163236128" expanded="true" signature="1647:1670" ph="..." />
+                <marker date="1541163236128" expanded="false" signature="2534:2769" ph="..." />
+                <marker date="1541163236128" expanded="true" signature="2835:3644" ph="..." />
+                <marker date="1541163236128" expanded="true" signature="3728:4014" ph="..." />
+                <marker date="1541163236128" expanded="false" signature="4169:4170" ph="..." />
+                <marker date="1541163236128" expanded="true" signature="9067:9068" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/add_GT.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="403">
+              <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -166,7 +179,16 @@
         <entry file="file://$PROJECT_DIR$/cv002_track.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="698">
-              <caret line="75" column="18" lean-forward="true" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
+              <caret line="75" column="18" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/add_logo.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="325">
+              <caret line="39" column="40" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -195,8 +217,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/002just.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="6" lean-forward="true" selection-start-column="6" selection-end-column="6" />
+            <state relative-caret-position="200">
+              <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -205,7 +230,7 @@
         <entry file="file://$PROJECT_DIR$/001just.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="350">
-              <caret line="14" column="42" lean-forward="true" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
+              <caret line="14" column="42" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -225,10 +250,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>show</find>
-      <find>len</find>
-      <find>threshold</find>
-      <find>prin</find>
       <find>max</find>
       <find>index_dict</find>
       <find>waitKey(0)</find>
@@ -248,13 +269,17 @@
       <find>colo</find>
       <find>type</find>
       <find>direc</find>
-      <find>面积</find>
       <find>圆</find>
       <find>min_</find>
       <find>腐蚀</find>
       <find>轮廓</find>
       <find>cal_point</find>
+      <find>面积</find>
       <find>矩形</find>
+      <find>直线</find>
+      <find>BoxPoints</find>
+      <find>CropThing</find>
+      <find>裁剪</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -310,16 +335,16 @@
         <option value="$PROJECT_DIR$/000justForTestNoUse.py" />
         <option value="$PROJECT_DIR$/add_logo.py" />
         <option value="$PROJECT_DIR$/001just.py" />
-        <option value="$PROJECT_DIR$/002just.py" />
         <option value="$PROJECT_DIR$/cv004_cotout_plus.py" />
         <option value="$PROJECT_DIR$/cv004_DT_main.py" />
+        <option value="$PROJECT_DIR$/002just.py" />
         <option value="$PROJECT_DIR$/cv005_DT_Plus.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="212" />
-    <option name="y" value="-18" />
+    <option name="x" value="249" />
+    <option name="y" value="-9" />
     <option name="width" value="1456" />
     <option name="height" value="1047" />
   </component>
@@ -385,6 +410,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/001just.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="002just" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="myTSdataset" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/002just.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -519,44 +565,23 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="yzn_make_data02" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="myTSdataset" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/yzn_make_data02.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.GT" />
       <item itemvalue="Python.1005" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.cv004_cotout_plus" />
-      <item itemvalue="Python.yzn_make_data02" />
       <item itemvalue="Python.001just" />
       <item itemvalue="Python.cv005_DT_Plus" />
       <item itemvalue="Python.cv004_DT_main" />
+      <item itemvalue="Python.002just" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.cv005_DT_Plus" />
+        <item itemvalue="Python.002just" />
         <item itemvalue="Python.cv004_DT_main" />
         <item itemvalue="Python.cv004_cotout_plus" />
         <item itemvalue="Python.001just" />
-        <item itemvalue="Python.yzn_make_data02" />
       </list>
     </recent_temporary>
   </component>
@@ -586,7 +611,7 @@
     <frame x="-8" y="32" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19125395" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20179136" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -758,13 +783,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/001.py" />
     <entry file="file://$PROJECT_DIR$/002.py" />
-    <entry file="file://$PROJECT_DIR$/add_GT.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/calculated_score.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2675">
@@ -828,13 +846,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/add_logo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="39" column="40" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/edit_txt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
@@ -866,23 +877,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/001just.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="42" lean-forward="true" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/002just.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="6" lean-forward="true" selection-start-column="6" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cv001_face_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="400">
@@ -890,24 +884,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cv002_track.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="698">
-          <caret line="75" column="18" lean-forward="true" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cv003_cutout.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="79" selection-start-line="79" selection-end-line="79" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cv004_DT_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="292">
-          <caret line="160" column="80" lean-forward="true" selection-start-line="159" selection-start-column="7" selection-end-line="160" selection-end-column="80" />
+          <caret line="160" column="80" selection-start-line="159" selection-start-column="7" selection-end-line="160" selection-end-column="80" />
           <folding>
             <element signature="e#24#53#0" expanded="true" />
             <element signature="e#156#604#0" />
@@ -922,23 +902,77 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cv003_cutout.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="79" selection-start-line="79" selection-end-line="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cv002_track.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="698">
+          <caret line="75" column="18" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/add_logo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="39" column="40" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/001just.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="14" column="42" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/add_GT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/002just.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+        <state relative-caret-position="292">
+          <caret line="39" column="11" lean-forward="true" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
           <folding>
             <element signature="e#24#53#0" expanded="true" />
-            <element signature="e#158#981#0" />
+            <element signature="e#157#925#0" />
+            <element signature="e#1212#1259#1" />
+            <element signature="e#962#1038#0" />
+            <element signature="e#1517#1566#0" />
+            <element signature="e#918#981#0" />
             <element signature="e#171#3494#0" />
             <element signature="e#155#696#0" />
-            <element signature="e#134#453#0" />
+            <element signature="e#142#590#0" />
             <element signature="e#131#2052#0" />
             <element signature="e#141#1208#0" />
             <element signature="e#396#481#0" />
-            <marker date="1541139214640" expanded="true" signature="964:1034" ph="..." />
-            <marker date="1541139214640" expanded="true" signature="1054:1863" ph="..." />
-            <marker date="1541139214640" expanded="true" signature="1947:2141" ph="..." />
-            <marker date="1541139214640" expanded="true" signature="2295:2297" ph="..." />
+            <marker date="1541163236128" expanded="true" signature="1647:1670" ph="..." />
+            <marker date="1541163236128" expanded="false" signature="2534:2769" ph="..." />
+            <marker date="1541163236128" expanded="true" signature="2835:3644" ph="..." />
+            <marker date="1541163236128" expanded="true" signature="3728:4014" ph="..." />
+            <marker date="1541163236128" expanded="false" signature="4169:4170" ph="..." />
+            <marker date="1541163236128" expanded="true" signature="9067:9068" ph="..." />
           </folding>
         </state>
       </provider>

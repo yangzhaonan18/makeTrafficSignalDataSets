@@ -5,6 +5,62 @@ import os
 import cv2
 import numpy as np
 
+
+def cal_rect_xy(box):  # box是倾斜矩阵四个点的坐标
+    # # print("box:", box)  # [[310 525] [307 254] [399 253] [402 524]]
+    # heigh = box[0][1] - box[1][1]
+    # width = box[2][0] - box[1][0]
+    # ((355.1850891113281, 389.43994140625), (92.04371643066406, 270.73419189453125), -0.7345210313796997)
+    x1 = min(i[0] for i in box)
+    x2 = max(i[0] for i in box)
+    y1 = min(i[1] for i in box)
+    y2 = max(i[1] for i in box)
+    return int(x1), int(x2), int(y1), int(y2)  # 返回倾斜矩形的最小外接矩形的左上角和右下角的点坐标
+
+
+def Crop_cnt(frame, cnt, Crop_num = 4):
+    hull = cv2.convexHull(cnt)  # 找到凸包
+    rect = cv2.minAreaRect(hull)  # 外接矩形
+    box = cv2.boxPoints(rect)  # 将中心点宽度高度旋转角度的表示方法转为点坐标
+    box = np.int0(box)
+    cx1, cx2, cy1, cy2 = cal_rect_xy(box)
+    CropThing = frame[cy1:cy2, cx1:cx2]
+    x0 = box[0][0] - cx1
+    y0 = box[0][1] - cy1
+    x1 = box[1][0] - cx1
+    y1 = box[1][1] - cy1
+    x2 = box[2][0] - cx1
+    y2 = box[2][1] - cy1
+    x3 = box[3][0] - cx1
+    y3 = box[3][1] - cy1
+    w = box[2][0] - box[1][0]
+    h = box[0][1] - box[1][1]
+
+
+    x = 500
+    pts1 = np.float32([[x1, y1], [x0, y0], [x2, y2]])
+    pts2 = np.float32([[0, 0], [0, h], [w, 0]])
+
+    M = cv2.getAffineTransform(pts1, pts2)
+    dst = cv2.warpAffine(CropThing, M, (w, h))
+    cv2.imshow("asdfdas", dst)
+    cv2.waitKey(0)
+
+
+    print("af", rect)
+    # 这里需要将外接倾斜矩形 纠正成水平的（投影变换）
+
+    # 先切分开图像成功多块
+
+    # 原图上裁剪出含cnt凸包的部分
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 10))  # 垂直模糊
+    ColorThings_er = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)
+
+    CropThing = 0
+
+    return CropThing
+
 def identify_light(SomeThings, cnt, color, min_s, max_s):
     ((x, y), radius) = cv2.minEnclosingCircle(cnt)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
     SomeThings_line = SomeThings.copy()
@@ -12,7 +68,7 @@ def identify_light(SomeThings, cnt, color, min_s, max_s):
     cv2.imshow("firt SomeThings_line", SomeThings_line)
     cv2.waitKey(0)  # ********************************
 
-    x1, x2, y1, y2 = cal_xy(SomeThings, int(x), int(y), radius)
+    x1, x2, y1, y2 = cal_circle_xy(SomeThings, int(x), int(y), radius)
     SquareThings = SomeThings[y1:y2, x1:x2]  # 裁剪需要的部分
     SquareThings_resize = cv2.resize(SquareThings, (200, 200), interpolation=cv2.INTER_CUBIC)
 
@@ -22,14 +78,21 @@ def identify_light(SomeThings, cnt, color, min_s, max_s):
     cv2.putText(SquareThings_resize, name, (1, 15), font, 0.5, (0, 0, 255), 1)  # 添加文字，1.2表示字体大小，（0,40）是
     cv2.imwrite(save_path, SquareThings_resize)  # 保存修改像素点后的图片
 
-def cla_color_art(frame, cnt, color): #计算颜色的比例 考虑 单个目标和多个目标的计算过程
-    color_art =0
-
-    return color_art
+def cla_color_ratio(cnt):  # 计算颜色的比例 考虑 单个目标和多个目标的计算过程
+    cnt_area = cv2.contourArea(cnt)
+    hull = cv2.convexHull(cnt)  # 计算出凸包形状(计算边界点)
+    hull_area = cv2.contourArea(hull)  # 计算凸包面积
+    color_ratio = float(cnt_area) / hull_area
+    return color_ratio
 
 
 
 def cla_hw_rat(cnt):
+    """
+
+    :param cnt:
+    :return:
+    """
     # ((x, y), radius) = cv2.minEnclosingCircle(cnt)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
 
     # SomeThings_line = SomeThings.copy()
@@ -55,9 +118,11 @@ def cla_hw_rat(cnt):
 
 def detection(frame, SomeThings, cnt, color):   # 判断是否是需要识别的对象 是返回1 否为0
     # 只有一个轮廓
-    hw_rat = cla_hw_rat(cnt)  # 判断外接矩形的长宽比例
-    color_art = cla_color_art(SomeThings, cnt, color)
-    if hw_rat > 10:
+    hw_ratio = cla_hw_rat(cnt)  # 判断外接矩形的长宽比例  不应该很大
+    color_art = cla_color_ratio(cnt)  # 计算轮毂面积 与凸包面积的比例 不应该很大
+    CropThing = Crop_cnt(frame, cnt)
+    # cnts = divide_cnt(frame, cnt)
+    if hw_ratio > 10:
         return 0
     else:
         flag = 0
@@ -74,10 +139,10 @@ def detection(frame, SomeThings, cnt, color):   # 判断是否是需要识别的
 
 
 
-def cal_point(SomeBinary, x, y, radius):  # 返回最大方向的编号int
+def cal_point(SomeBinary, x, y, radius): # 返回最大方向的编号int
     x = int(x)
     y = int(y)
-    x1, x2, y1, y2 = cal_xy(SomeBinary, x, y, radius)
+    x1, x2, y1, y2 = cal_circle_xy(SomeBinary, x, y, radius)
     S00 = SomeBinary[y1:y, x1:x]  # 计算面积时，使用二值图，左上
     S01 = SomeBinary[y1:y, x:x2]  # 右上
     S10 = SomeBinary[y:y2, x1:x]  # 左下
@@ -192,8 +257,7 @@ def find_class_name(SquareThings, color, min_s, max_s):
         return "NONONOONON0 color %d:" % color
 
 
-
-def cal_xy(frame, x, y, radius):
+def cal_circle_xy(frame, x, y, radius):
     x1 = x - radius if x - radius > 0 else 0
     x2 = x + radius if x + radius < frame.shape[1] else frame.shape[1]  # cv里面横坐标是x 是shape[1]
     y1 = y - radius if y - radius > 0 else 0
@@ -205,7 +269,7 @@ def cal_xy(frame, x, y, radius):
 def add_line(ColorThings, x, y, radius):
     x = int(x)
     y = int(y)
-    x1, x2, y1, y2 = cal_xy(ColorThings, x, y, radius)
+    x1, x2, y1, y2 = cal_circle_xy(ColorThings, x, y, radius)
     # 画矩形框
     cv2.circle(ColorThings, (x, y), int(radius), (0, 255, 255), 2)  # 画圆
     cv2.rectangle(ColorThings, (x1, y1), (x, y), (0, 0, 255), 2)  # 左上
