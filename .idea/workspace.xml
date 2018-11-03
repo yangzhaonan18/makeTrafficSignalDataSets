@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52863333-ba22-4ef1-82f1-490cbaa593e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/003just.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/000justForTestNoUse.py" beforeDir="false" afterPath="$PROJECT_DIR$/000justForTestNoUse.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cv005_DT_Plus.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv005_DT_Plus.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -80,7 +77,7 @@
           <entry key="gitignore" value="2" />
           <entry key="jpg" value="1" />
           <entry key="md" value="3" />
-          <entry key="py" value="165" />
+          <entry key="py" value="166" />
           <entry key="xml" value="7" />
         </counts>
       </usages-collector>
@@ -89,7 +86,7 @@
           <entry key="Image" value="1" />
           <entry key="Markdown" value="3" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="165" />
+          <entry key="Python" value="166" />
           <entry key="XML" value="7" />
         </counts>
       </usages-collector>
@@ -97,7 +94,7 @@
         <counts>
           <entry key="dummy" value="64" />
           <entry key="md" value="125" />
-          <entry key="py" value="24660" />
+          <entry key="py" value="25324" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -105,7 +102,7 @@
         <counts>
           <entry key="Markdown" value="125" />
           <entry key="PLAIN_TEXT" value="64" />
-          <entry key="Python" value="24660" />
+          <entry key="Python" value="25324" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -113,119 +110,44 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-50">
-              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
-              <folding>
-                <element signature="e#24#53#0" expanded="true" />
-                <element signature="e#174#1190#0" />
-                <element signature="e#138#768#0" />
-                <element signature="e#689#1198#0" />
-                <element signature="e#689#756#0" />
-                <element signature="e#1390#3385#0" />
-                <element signature="e#1241#1307#1" />
-                <element signature="e#2218#3385#0" />
-                <element signature="e#2625#3400#0" />
-                <element signature="e#3801#4896#0" />
-                <element signature="e#3801#3845#0" />
-                <element signature="e#4213#4268#0" />
-                <element signature="e#4548#4669#0" />
-                <element signature="e#5945#6976#0" />
-                <element signature="e#5462#5538#0" />
-                <element signature="e#5677#6507#0" />
-                <element signature="e#6585#9917#0" />
-                <element signature="e#9980#10521#0" />
-                <element signature="e#10568#10887#0" />
-                <element signature="e#11426#13347#0" />
-                <element signature="e#18821#19673#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/_collections.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-567">
-              <caret line="95" column="13" selection-start-line="95" selection-start-column="9" selection-end-line="95" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/planets_circles.jpg">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="700">
-              <caret line="4727" column="24" selection-start-line="4727" selection-start-column="18" selection-end-line="4727" selection-end-column="24" />
+            <state relative-caret-position="175">
+              <caret line="2469" lean-forward="true" selection-start-line="2469" selection-end-line="2469" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/002just.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="17" column="14" lean-forward="true" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+            <state relative-caret-position="200">
+              <caret line="139" column="20" lean-forward="true" selection-start-line="139" selection-start-column="20" selection-end-line="139" selection-end-column="20" />
               <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/add_GT.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/add_logo.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="39" column="40" lean-forward="true" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/003just.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
-              <folding>
-                <element signature="e#15#25#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/Python36/Lib/site-packages/numpy/core/fromnumeric.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="61" selection-start-line="61" selection-end-line="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/001just.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="20" column="47" lean-forward="true" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#24#53#0" expanded="true" />
+                <element signature="e#1231#1855#0" />
+                <element signature="e#1902#2411#0" />
+                <element signature="e#2464#4621#0" />
+                <element signature="e#2464#2547#1" />
+                <element signature="e#2831#2917#0" />
+                <element signature="e#3191#3403#0" />
+                <element signature="e#3438#4621#0" />
+                <element signature="e#4686#5463#0" />
+                <element signature="e#7057#8154#0" />
+                <element signature="e#7057#7101#0" />
+                <element signature="e#7696#7753#0" />
+                <element signature="e#7893#8014#0" />
+                <element signature="e#8033#8154#0" />
+                <element signature="e#9341#10171#0" />
+                <element signature="e#10249#13581#0" />
+                <element signature="e#13644#14185#0" />
+                <element signature="e#14232#14551#0" />
+                <element signature="e#14599#15054#0" />
+                <element signature="e#15090#17013#0" />
+                <element signature="e#17101#19005#0" />
+                <element signature="e#21141#21993#0" />
+                <marker date="1541270629580" expanded="true" signature="8670:8700" ph="..." />
               </folding>
             </state>
           </provider>
@@ -243,9 +165,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>type</find>
-      <find>direc</find>
-      <find>圆</find>
       <find>min_</find>
       <find>腐蚀</find>
       <find>cal_point</find>
@@ -273,6 +192,9 @@
       <find>Cropthin</find>
       <find>CropThing</find>
       <find>cv2.waitKey(0)</find>
+      <find>and</find>
+      <find>cv2.bitwise</find>
+      <find>find_ColorThings</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -622,25 +544,6 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49848023" visible="true" weight="0.20179136" />
-      <window_info id="Structure" order="1" sideWeight="0.50151974" side_tool="true" weight="0.20179136" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.12595005" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.13029316" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.33767644" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32899022" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32899022" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32899022" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32899022" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -913,16 +816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/002just.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="17" column="14" lean-forward="true" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/add_GT.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="25">
@@ -954,16 +847,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
-          <caret line="4727" column="24" selection-start-line="4727" selection-start-column="18" selection-end-line="4727" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/planets_circles.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/_collections.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-567">
@@ -971,32 +854,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/planets_circles.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1913481798/cv2/cv2/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="2469" lean-forward="true" selection-start-line="2469" selection-end-line="2469" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/002just.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="17" column="14" lean-forward="true" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-50">
-          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        <state relative-caret-position="200">
+          <caret line="139" column="20" lean-forward="true" selection-start-line="139" selection-start-column="20" selection-end-line="139" selection-end-column="20" />
           <folding>
             <element signature="e#24#53#0" expanded="true" />
-            <element signature="e#174#1190#0" />
-            <element signature="e#138#768#0" />
-            <element signature="e#689#1198#0" />
-            <element signature="e#689#756#0" />
-            <element signature="e#1390#3385#0" />
-            <element signature="e#1241#1307#1" />
-            <element signature="e#2218#3385#0" />
-            <element signature="e#2625#3400#0" />
-            <element signature="e#3801#4896#0" />
-            <element signature="e#3801#3845#0" />
-            <element signature="e#4213#4268#0" />
-            <element signature="e#4548#4669#0" />
-            <element signature="e#5945#6976#0" />
-            <element signature="e#5462#5538#0" />
-            <element signature="e#5677#6507#0" />
-            <element signature="e#6585#9917#0" />
-            <element signature="e#9980#10521#0" />
-            <element signature="e#10568#10887#0" />
-            <element signature="e#11426#13347#0" />
-            <element signature="e#18821#19673#0" />
+            <element signature="e#1231#1855#0" />
+            <element signature="e#1902#2411#0" />
+            <element signature="e#2464#4621#0" />
+            <element signature="e#2464#2547#1" />
+            <element signature="e#2831#2917#0" />
+            <element signature="e#3191#3403#0" />
+            <element signature="e#3438#4621#0" />
+            <element signature="e#4686#5463#0" />
+            <element signature="e#7057#8154#0" />
+            <element signature="e#7057#7101#0" />
+            <element signature="e#7696#7753#0" />
+            <element signature="e#7893#8014#0" />
+            <element signature="e#8033#8154#0" />
+            <element signature="e#9341#10171#0" />
+            <element signature="e#10249#13581#0" />
+            <element signature="e#13644#14185#0" />
+            <element signature="e#14232#14551#0" />
+            <element signature="e#14599#15054#0" />
+            <element signature="e#15090#17013#0" />
+            <element signature="e#17101#19005#0" />
+            <element signature="e#21141#21993#0" />
+            <marker date="1541270629580" expanded="true" signature="8670:8700" ph="..." />
           </folding>
         </state>
       </provider>

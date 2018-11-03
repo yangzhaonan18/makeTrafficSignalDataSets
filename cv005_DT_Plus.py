@@ -6,35 +6,6 @@ import cv2
 import numpy as np
 
 
-def cal_color_area(contours, hierarchy):  # 计算轮廓的面积。两个变量的长度是相同的，同一个图形的参数
-
-    # print(type(hierarchy))  # <class 'numpy.ndarray'>  多维矩阵………还没有细看
-    # print("hierarchy[0] = ", hierarchy[0])  # hierarchy[0] =  [[ 1 -1 -1 -1] [ 2  0 -1 -1]]
-    # print("hierarchy[0][0][0] = ", hierarchy[0][0][0])  # hierarchy[0][0][0] =  1
-    if len(contours) == 0:
-        print("len(contours) == 0:")
-        return -1
-    if len(contours) == 1:
-        return cv2.contourArea(contours[0])
-    else:
-        area_p = 0
-        area_n = 0
-        i = 0
-        j = 0
-        while i != -1:  # 遍历第一层所有的轮廓的编号  cv2.RETR_CCOMP 保证包住白色的轮廓是第一层，包住黑色的是第二层
-            # print("i =", i)
-            area_p += cv2.contourArea(contours[i])
-            j = i
-            i = hierarchy[0][j][0]  # 同一层的编号是串联的，一个接一个
-        print("area_p =", area_p)
-        while j != -1:  # 遍历第二层所有的轮廓的编号
-            # print("j =", j)
-            area_n += cv2.contourArea(contours[i])
-
-            j = hierarchy[0][j][0]
-        print("area_n =", area_n)
-        print("area_p - area_n", area_p - area_n)
-        return area_p - area_n
 
 
 def divide_crop(CropThing, wh_ratio):
@@ -142,25 +113,63 @@ def identify_light(SomeThings, cnt, color, min_s, max_s):
     cv2.imwrite(save_path, SquareThings_resize)  # 保存修改像素点后的图片
 
 
+def cal_color_area(BinColors, contours, hierarchy):  # 计算轮廓的面积。两个变量的长度是相同的，同一个图形的参数
+
+    # print(type(hierarchy))  # <class 'numpy.ndarray'>  多维矩阵………还没有细看
+    # print("hierarchy[0] = ", hierarchy[0])  # hierarchy[0] =  [[ 1 -1 -1 -1] [ 2  0 -1 -1]]
+    # print("hierarchy[0][0][0] = ", hierarchy[0][0][0])  # hierarchy[0][0][0] =  1
+    if len(contours) == 0:
+        print("len(contours) == 0:")
+        return -1
+    if len(contours) == 1:
+        return cv2.contourArea(contours[0])
+    area_p = 0
+    area_n = 0
+    i = 0
+    j = 0
+    flag = 1
+    BinColors_show = BinColors.copy()
+    print("hierarchy", hierarchy)
+    while i != -1:  # 遍历第一层所有的轮廓的编号  cv2.RETR_CCOMP 保证包住白色的轮廓是第一层，包住黑色的是第二层
+        print("i =", i)
+        cv2.drawContours(BinColors_show, contours, i, (0, 0, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+        cv2.imshow("cal_color_area//BinColors_show", BinColors_show)
+        area_p += cv2.contourArea(contours[i])
+        if hierarchy[0][i][0] != i + 1 and flag == 1:
+            j = i + 1
+            flag = 0
+        i = hierarchy[0][i][0]  # 同一层的编号是串联的，一个接一个
+    print("area_p =", area_p)
+    while j != -1:  # 遍历第二层所有的轮廓的编号
+        print("j =", j)
+        cv2.drawContours(BinColors_show, contours, j, (0, 255, 0), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+        cv2.imshow("cal_color_area//BinColors_show", BinColors_show)
+        area_n += cv2.contourArea(contours[j])
+
+        j = hierarchy[0][j][0]
+    print("area_n =", area_n)
+    print("area_p - area_n", area_p - area_n)
+    return area_p - area_n
+
+
 def cal_color_ratio(CropThing, color):  # 计算颜色的比例 考虑 单个目标和多个目标的计算过程 方法相同
     # cv2.imshow("cal_color_ratio/CropThing ", CropThing)  # 直接裁剪后，没有处理过的图片
-    ColorThings, SomeBinary, contours, hierarchy = find_ColorThings(CropThing, color, num=0, RETR=cv2.RETR_CCOMP)
+    BinColors, BinThings, contours, hierarchy = find_ColorThings(CropThing, color, num=0, RETR=cv2.RETR_CCOMP)
     if len(contours) == 0:
         return -1
-    color_area = cal_color_area(contours, hierarchy)
-
+    color_area = cal_color_area(BinColors, contours, hierarchy)
     cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
     cnt_area = cv2.contourArea(cnt_max)  # 轮廓的面积 ？ 不能使用这个参数 判断不直观
     hull = cv2.convexHull(cnt_max)  # 计算出凸包形状(计算边界点)
     hull_area = cv2.contourArea(hull)  # 计算凸包面积
     if hull_area == 0:
-        print("hull_area == 0")
+        print("cal_color_ratio//hull_area == 0")
         return -1
     color_ratio = float(color_area) / hull_area
     cnt_ratio = float(cnt_area) / hull_area
-    print("hull_area", hull_area)
-    print("color_ratio", color_ratio)
-    print("cnt_ratio", cnt_ratio)
+    print("cal_color_ratio//hull_area", hull_area)
+    print("cal_color_ratio//color_ratio", color_ratio)
+    print("cal_color_ratio//cnt_ratio", cnt_ratio)
 
     CropThing_show = CropThing.copy()
     # for i in range(len(contours)):  [contours[3]]
@@ -169,9 +178,7 @@ def cal_color_ratio(CropThing, color):  # 计算颜色的比例 考虑 单个目
     # cv2.imshow(" cal_color_ratio", CropThing_show)
     # cv2.waitKey(0)
 
-    print("asdfadsfadsfadsffasdf")
 
-    #
     # CropThing_show = SomeBinary.copy()  # 这个图片只要红色
     # # cv2.drawContours(CropThing_show, contours, i, (0, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
     #
@@ -213,34 +220,28 @@ def cal_wh_ratio(cnt):
         return [1, wh_rat]  # 1 表示图标是纵向的
 
 
-def detection(frame, SomeThings, color, contours, i):  # 判断是否是需要识别的对象 是返回1 否为0
+def detection(frame, BinColors, color, contours, i):  # 判断是否是需要识别的对象 是返回1 否为0
     # 输入只有一个轮廓
-    SomeThings_show = SomeThings.copy()
-    cv2.drawContours(SomeThings_show, contours, i, (0, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
-    cv2.imshow(" detection/SomeThings_show", SomeThings_show)
-    # cv2.waitKey(0)
+    BinColors_show = BinColors.copy()
+    cv2.drawContours(BinColors_show, contours, i, (0, 255, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
+    cv2.imshow(" detection/BinColors_show", BinColors_show)
 
     wh_ratio = cal_wh_ratio(contours[i])  # 判断外接矩形的长宽比例   不应该很大
-
     CropThing = Crop_cnt(frame, contours[i], wh_ratio)  # 裁剪图片， 将图片变成水平的
-
     color_ratio = cal_color_ratio(CropThing, color)  # 计算轮廓面积 与 凸包面积的比例  不应该很大
     # print("asfasdfaaaaaaaaa", int(wh_ratio[1]))
-    if wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3):  # 颜色比例判断函数需要修改
-        #  特别长的不可能，1:2比例的红色比例不可能很高
+    if wh_ratio[1] > 10:  # 特别长的不可能，
         print("wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3 )", wh_ratio[1], wh_ratio[1], color_ratio)
-        return 0
-
+        return -1
+    if wh_ratio[1] > 1 and color_ratio > 0.9:  # 1:2 比例的红色比例不可能很高
+        print("detection//wh_ratio[1] > 1 and color_ratio > 0.9")
+        return -1
     cnts = divide_crop(CropThing, wh_ratio)
-    if wh_ratio[1] > 10:
-        return 0
-    else:
-        flag = 0
-        return 1
+
+    return 1
 
     # cv2.drawContours(SomeThings_line, [box[0:2]], 0, (0, 0, 255), 2)   # 画外接矩形
     # cv2.imshow("minAreaRect(cnt)", SomeThings_line)
-    # cv2.waitKey(0)
 
 
 def cal_point(SomeBinary, x, y, radius):  # 返回最大方向的编号int
@@ -336,7 +337,7 @@ def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
         # cv2.waitKey(0)  # ********************************
 
         ilter_num += 1
-        ColorThings, SomeBinary, contours = find_ColorThings(ColorThings, color, num=ilter_num)
+        BinThings, BinColors, contours, hierarchy = find_ColorThings(ColorThings, color, num=ilter_num)
         contours.sort(key=lambda c: cv2.contourArea(c), reverse=True)
         if not contours or cv2.contourArea(contours[0]) < 5:
             break
@@ -349,10 +350,10 @@ def judge_index(ColorThings, contours, color, min_s, max_s, max_item):
 
 
 def find_class_name(SquareThings, color, min_s, max_s):
-    ColorThings, _, contours = find_ColorThings(SquareThings, color, num=1)
+    BinColors, BinThings, contours, hierarchy = find_ColorThings(SquareThings, color, num=1)
     contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
     if len(contours) > 0:
-        direct_index = judge_index(ColorThings, contours, color, min_s=min_s, max_s=max_s, max_item=55)
+        direct_index = judge_index(BinColors, contours, color, min_s=min_s, max_s=max_s, max_item=55)
         index_dict = {0: "circle", 1: "<- ", 2: "/\\", 3: "->", 4: "V"}
         print("direction:", index_dict[direct_index])
         return index_dict[direct_index]
@@ -445,22 +446,30 @@ def find_ColorThings(frame, color, num, RETR=cv2.RETR_EXTERNAL):
     # cv2.imshow("an_ColorThings:", an_ColorThings)
     # cv2.waitKey(0)  # ********************************
 
-    # cv2.imshow("%d SomeThings:1R2G3B" % k, SomeThings)  # 显示感兴趣的颜色区域
+    # cv2.imshow("%d BinColor:1R2G3B" % k, BinColor)  # 显示感兴趣的颜色区域
 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))  # 直线提取    找到轮廓的时候忽略掉小目标 后续正确的小目标通过膨胀复原
     ColorThings = cv2.morphologyEx(ColorThings, cv2.MORPH_OPEN, kernel)
 
     # cv2.imshow("line-result", ColorThings_er)
 
-    dst = cv2.GaussianBlur(ColorThings, (3, 3), 0)  # 高斯消除噪音
+    dst = cv2.GaussianBlur(ColorThings, (3, 3), 0)  # 彩色图时 高斯消除噪音
     gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)  # 转成灰色图像
     # cv2.imshow("gray image", gray)
 
-    ret, SomeBinary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
+    ret, BinThings = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
     # cloneImage, contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # 边界不是封闭的
-    # cloneImage, contours, hierarchy = cv2.findContours(SomeBinary, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
-    cloneImage, contours, hierarchy = cv2.findContours(SomeBinary, RETR, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
-    return SomeBinary, cloneImage, contours, hierarchy  # cloneImage 和 SomeBinary一模一样
+    # cloneImage, contours, hierarchy = cv2.findContours(BinThings, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+    BinThings, contours, hierarchy = cv2.findContours(BinThings, RETR, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))  # 黑白图时 直线消除 小斑点
+    BinThings = cv2.morphologyEx(BinThings, cv2.MORPH_OPEN, kernel)  # 输出是二值化的图片， 后面用来作为轮廓使用 吧！！！！！
+    BinThings, contours, hierarchy = cv2.findContours(BinThings, RETR, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+
+    ret, mask = cv2.threshold(BinThings, 190, 255, cv2.THRESH_BINARY)  # 二值图提取mask
+    BinColors = cv2.bitwise_and(frame, frame, mask=mask)  # 二值化中白色对应的彩色部分
+    # cv2.imshow("find_ColorThings/BinColors：", BinColors)
+    return BinColors, BinThings, contours, hierarchy
 
 
 def contours_demo(img_path, save_path, min_s, max_s):
@@ -477,16 +486,16 @@ def contours_demo(img_path, save_path, min_s, max_s):
         # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
         # frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)
 
-        SomeBinary, SomeThings, contours, _ = find_ColorThings(frame, color, num=0)  # num = 腐蚀的次数
+        BinColors, BinThings, contours, hierarchy = find_ColorThings(frame, color, num=0)  # num = 腐蚀的次数
         # SomeThings = cv2.pyrMeanShiftFiltering( SomeThings, 15, 15)
-        # cv2.imshow("firt SomeThings", SomeThings)
+        #         # cv2.imshow("firt SomeThings", SomeThings)
         # SomeThings = cv2.GaussianBlur(SomeThings, (5, 5), 0)  # 高斯消除噪音
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
-        SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel)
 
         # cv2.imshow("opencv-result", SomeThings)
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
         #     cv2.drawContours(SomeThings, contours, i, (255, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+
+        # SomeBinary = cv2.bitwise_and(frame, SomeBinary)
 
         # cv2.waitKey(0)  # ********************************
         # if 1 == 1:
@@ -497,7 +506,7 @@ def contours_demo(img_path, save_path, min_s, max_s):
         # cv2.imshow("SomeThings", SomeThings)
         # cv2.waitKey(0)  # ********************************
 
-        if len(contours) < 1:  # 如果存在轮廓
+        if len(contours) < 1:  # 排除不存在轮廓的情况
             # contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
             print("len(contours) < 1 :", len(contours))
             return -1
@@ -505,10 +514,10 @@ def contours_demo(img_path, save_path, min_s, max_s):
         for i in range(0, len(contours)):
             # cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
             # print("len(contours):", len(contours))
-            if cv2.contourArea(contours[i]) < 50:  # 面积判断
+            if cv2.contourArea(contours[i]) < 50:  # 排除面积判断 < 50
                 print("cv2.contourArea(contours[%d]) < 100 " % i, cv2.contourArea(contours[i]))
                 return -1
-            detection(frame, SomeThings, color, contours, i)  # 判断是否是 需要识别的对象， 是返回1 否为0
+            detection(frame, BinColors, color, contours, i)  # 判断是否是 需要识别的对象， 是返回1 否为0
             # identify_light(SomeThings, contours[i], color, min_s, max_s)
 
 
