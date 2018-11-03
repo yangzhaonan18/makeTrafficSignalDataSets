@@ -6,7 +6,42 @@ import cv2
 import numpy as np
 
 
+def cal_color_area(contours, hierarchy):  # 计算轮廓的面积。两个变量的长度是相同的，同一个图形的参数
+
+    # print(type(hierarchy))  # <class 'numpy.ndarray'>  多维矩阵………还没有细看
+    # print("hierarchy[0] = ", hierarchy[0])  # hierarchy[0] =  [[ 1 -1 -1 -1] [ 2  0 -1 -1]]
+    # print("hierarchy[0][0][0] = ", hierarchy[0][0][0])  # hierarchy[0][0][0] =  1
+    if len(contours) == 0:
+        print("len(contours) == 0:")
+        return -1
+    if len(contours) == 1:
+        return cv2.contourArea(contours[0])
+    else:
+        area_p = 0
+        area_n = 0
+        i = 0
+        j = 0
+        while i != -1:  # 遍历第一层所有的轮廓的编号  cv2.RETR_CCOMP 保证包住白色的轮廓是第一层，包住黑色的是第二层
+            # print("i =", i)
+            area_p += cv2.contourArea(contours[i])
+            j = i
+            i = hierarchy[0][j][0]  # 同一层的编号是串联的，一个接一个
+        print("area_p =", area_p)
+        while j != -1:  # 遍历第二层所有的轮廓的编号
+            # print("j =", j)
+            area_n += cv2.contourArea(contours[i])
+
+            j = hierarchy[0][j][0]
+        print("area_n =", area_n)
+        print("area_p - area_n", area_p - area_n)
+        return area_p - area_n
+
+
 def divide_crop(CropThing, wh_ratio):
+    ColorThings_divide = CropThing.copy()  # 显示图片
+    cv2.imshow("divide_crop", ColorThings_divide)
+    cv2.waitKey(0)
+
     # if wh_ratio[0] == 0:
     #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 1))  # 水平消除模糊
     #     dst_divid = cv2.morphologyEx(CropThing, cv2.MORPH_OPEN, kernel)
@@ -33,50 +68,60 @@ def cal_rect_xy(box):  # box是倾斜矩阵四个点的坐标
     return int(x1), int(x2), int(y1), int(y2)  # 返回倾斜矩形的最小外接矩形的左上角和右下角的点坐标
 
 
-def Crop_cnt(frame, cnt):  # 裁剪轮廓凸包
+def Crop_cnt(frame, cnt, wh_ratio):  # 裁剪轮廓凸包
+    """
+    :param frame:
+    :param cnt:
+    :return: CropThing 返回经过 旋转裁剪 后的图片
+    """
     hull = cv2.convexHull(cnt)  # 找到凸包
-    rect = cv2.minAreaRect(hull)  # 外接矩形
-    box01 = cv2.boxPoints(rect)  # 将中心点宽度高度旋转角度的表示方法转为点坐标
-    box = np.int0(box01)
+    rect_min = cv2.minAreaRect(hull)  # 最小外接矩形
+    x1, y1, w, h = cv2.boundingRect(hull)  # 外接矩形
+    box01 = cv2.boxPoints(rect_min)  # 将中心点宽度高度旋转角度的表示方法转为点坐标
+    box = np.int0(box01)  # 最小外接矩形
 
     ColorThings_line = frame.copy()  # 显示图片
-    cv2.drawContours(ColorThings_line, [box], 0, (0, 0, 255), 2)   # 画外接矩形
 
-    print("box:", box)
-    cv2.imshow("box:", ColorThings_line)
-    cv2.waitKey(0)
+    # cv2.rectangle(ColorThings_line, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 2)  # 画外接矩形
+    # cv2.imshow("Crop_cnt: ", ColorThings_line)
+    # print("box", type(box))  # box  <class 'numpy.ndarray'> [[178 488] [156 444] [322 363] [343 407]]
+    # print("box:", box)
 
+    print("wh_ratio", wh_ratio)
+    if wh_ratio[1] == 1:  # 正方的图形，不需要纠正角度（很难判断是否是倾斜的）
+        cv2.rectangle(ColorThings_line, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 2)  # 画最小外接矩形
+        cv2.imshow("ColorThings_line", ColorThings_line)
+        # cv2.waitKey(0)
+        return frame[y1: y1 + h, x1:x1 + w]
 
-    cx1, cx2, cy1, cy2 = cal_rect_xy(box)
-    CropThing = frame[cy1:cy2, cx1:cx2]
-    x0 = box[0][0] - cx1  # 最下面的那个点（首选左边的）
-    y0 = box[0][1] - cy1
-    x1 = box[1][0] - cx1
-    y1 = box[1][1] - cy1
-    x2 = box[2][0] - cx1
-    y2 = box[2][1] - cy1
-    x3 = box[3][0] - cx1
-    y3 = box[3][1] - cy1
-    w = box[2][0] - box[1][0]
-    h = box[0][1] - box[1][1]
-    print(x0, x1, x2, x3, y0, y1, y2, y3)
-    rat = 1  # 缩放比例  利用三个坐标点透视变换
-    pts1 = np.float32([[x1, y1], [x0, y0], [x2, y2]])
-    pts2 = np.float32([[0, 0], [0, int(h * rat)], [int(w * rat), 0]])
-    print("pts1, pts2", pts1, pts2)
-    print("(int(w * rat), int(h * rat)):", (int(w * rat), int(h * rat)))
-    M = cv2.getAffineTransform(pts1, pts2)
-
-    CropThing = cv2.warpAffine(CropThing, M, (int(w * rat), int(h * rat)))  # 纠正倾斜后的裁剪后图形
-    cv2.imshow("warpAffine", CropThing)
-    cv2.waitKey(0)
-
-
-    # 这里需要将外接倾斜矩形 纠正成水平的（投影变换）
-    # 先切分开图像成功多块
-    # 原图上裁剪出含cnt凸包的部分
-
-    return CropThing
+    else:  # 长条的图形需要纠正倾斜
+        cx1, cx2, cy1, cy2 = cal_rect_xy(box)
+        CropThing = frame[cy1:cy2, cx1:cx2]  # 裁剪图片
+        x0 = box[0][0] - cx1  # 最下面的那个点（首选左边的）
+        y0 = box[0][1] - cy1
+        x1 = box[1][0] - cx1
+        y1 = box[1][1] - cy1
+        x2 = box[2][0] - cx1
+        y2 = box[2][1] - cy1
+        x3 = box[3][0] - cx1
+        y3 = box[3][1] - cy1
+        w = box[2][0] - box[1][0]
+        h = box[0][1] - box[1][1]
+        print(x0, x1, x2, x3, y0, y1, y2, y3)
+        rat = 1.1  # 缩放比例  利用三个坐标点透视变换 （特点：前后平行线保持平行）
+        pts1 = np.float32([[x1, y1], [x0, y0], [x2, y2]])
+        pts2 = np.float32([[0, 0], [0, int(h * rat)], [int(w * rat), 0]])
+        # print("pts1, pts2", pts1, pts2)
+        # print("(int(w * rat), int(h * rat)):", (int(w * rat), int(h * rat)))
+        M = cv2.getAffineTransform(pts1, pts2)
+        CropThing = cv2.warpAffine(CropThing, M, (int(w * rat), int(h * rat)))  # 纠正倾斜后的裁剪后图形
+        cv2.drawContours(ColorThings_line, [box], 0, (0, 0, 255), 2)  # 画最小外接矩形
+        cv2.imshow("ColorThings_line", ColorThings_line)
+        # cv2.waitKey(0)
+        # 这里需要将外接倾斜矩形 纠正成水平的（透视变换）
+        # 先切分开图像成功多块
+        # 原图上裁剪出含cnt凸包的部分
+        return CropThing  # 返回裁剪下来的图片
 
 
 def identify_light(SomeThings, cnt, color, min_s, max_s):
@@ -84,7 +129,7 @@ def identify_light(SomeThings, cnt, color, min_s, max_s):
     SomeThings_line = SomeThings.copy()
     add_line(SomeThings_line, x, y, radius)
     cv2.imshow("firt SomeThings_line", SomeThings_line)
-    cv2.waitKey(0)  # ********************************
+    # cv2.waitKey(0)  # ********************************
 
     x1, x2, y1, y2 = cal_circle_xy(SomeThings, int(x), int(y), radius)
     SquareThings = SomeThings[y1:y2, x1:x2]  # 裁剪需要的部分
@@ -97,16 +142,52 @@ def identify_light(SomeThings, cnt, color, min_s, max_s):
     cv2.imwrite(save_path, SquareThings_resize)  # 保存修改像素点后的图片
 
 
-def cla_color_ratio(cnt):  # 计算颜色的比例 考虑 单个目标和多个目标的计算过程
-    cnt_area = cv2.contourArea(cnt)
-    hull = cv2.convexHull(cnt)  # 计算出凸包形状(计算边界点)
+def cal_color_ratio(CropThing, color):  # 计算颜色的比例 考虑 单个目标和多个目标的计算过程 方法相同
+    # cv2.imshow("cal_color_ratio/CropThing ", CropThing)  # 直接裁剪后，没有处理过的图片
+    ColorThings, SomeBinary, contours, hierarchy = find_ColorThings(CropThing, color, num=0, RETR=cv2.RETR_CCOMP)
+    if len(contours) == 0:
+        return -1
+    color_area = cal_color_area(contours, hierarchy)
+
+    cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
+    cnt_area = cv2.contourArea(cnt_max)  # 轮廓的面积 ？ 不能使用这个参数 判断不直观
+    hull = cv2.convexHull(cnt_max)  # 计算出凸包形状(计算边界点)
     hull_area = cv2.contourArea(hull)  # 计算凸包面积
-    color_ratio = float(cnt_area) / hull_area
+    if hull_area == 0:
+        print("hull_area == 0")
+        return -1
+    color_ratio = float(color_area) / hull_area
+    cnt_ratio = float(cnt_area) / hull_area
+    print("hull_area", hull_area)
+    print("color_ratio", color_ratio)
+    print("cnt_ratio", cnt_ratio)
+
+    CropThing_show = CropThing.copy()
+    # for i in range(len(contours)):  [contours[3]]
+    # cnts = contours[max_index]
+    # cv2.drawContours(CropThing_show, [contours[3]], -1, (0, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+    # cv2.imshow(" cal_color_ratio", CropThing_show)
+    # cv2.waitKey(0)
+
+    print("asdfadsfadsfadsffasdf")
+
+    #
+    # CropThing_show = SomeBinary.copy()  # 这个图片只要红色
+    # # cv2.drawContours(CropThing_show, contours, i, (0, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+    #
+    # cv2.namedWindow("cal_color_ratio:", 0)
+    # cv2.resizeWindow("cal_color_ratio:", 640, 480)
+    # cv2.imshow("cal_color_ratio:", CropThing_show)
+    # cv2.waitKey(0)
+    #
+
     return color_ratio
 
 
-def cla_wh_ratio(cnt):
-    cv2.minEnclosingCircle(cnt)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
+def cal_wh_ratio(cnt):
+    # x, y, w, h = cv2.boundingRect(cnt)  # 外接矩形
+    # cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 5)
+    # cv2.minEnclosingCircle(cnt)  # 确定面积最大的轮廓的外接圆  返回圆心坐标和半径
     # SomeThings_line = SomeThings.copy()
     # SomeThings_line =
     # cv2.imshow("SomeThings_line", SomeThings_line )
@@ -119,7 +200,7 @@ def cla_wh_ratio(cnt):
 
     if heigh < 10 or width < 10:  # 忽略低于10像素的 #################33？？？？？？？？？？？？？？？？？？？？？？？？
         print("heigh < 10 or width < 10")
-        return [0, 0]
+        return [-1, -1]
     rat = max(heigh, width) / min(heigh, width)  # int(rat + 0.5) =  3
     wh_rat = int(rat + 0.5)  # 四舍五入取整
     if width > heigh:
@@ -132,26 +213,30 @@ def cla_wh_ratio(cnt):
         return [1, wh_rat]  # 1 表示图标是纵向的
 
 
-def detection(frame, SomeThings, cnt, color, contours, i):  # 判断是否是需要识别的对象 是返回1 否为0
+def detection(frame, SomeThings, color, contours, i):  # 判断是否是需要识别的对象 是返回1 否为0
     # 输入只有一个轮廓
-    cv2.imshow("asdf", SomeThings)
-    wh_ratio = cla_wh_ratio(cnt)  # 判断外接矩形的长宽比例   不应该很大
-    color_ratio = cla_color_ratio(cnt)  # 计算轮廓面积 与 凸包面积的比例  不应该很大
+    SomeThings_show = SomeThings.copy()
+    cv2.drawContours(SomeThings_show, contours, i, (0, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+    cv2.imshow(" detection/SomeThings_show", SomeThings_show)
+    # cv2.waitKey(0)
+
+    wh_ratio = cal_wh_ratio(contours[i])  # 判断外接矩形的长宽比例   不应该很大
+
+    CropThing = Crop_cnt(frame, contours[i], wh_ratio)  # 裁剪图片， 将图片变成水平的
+
+    color_ratio = cal_color_ratio(CropThing, color)  # 计算轮廓面积 与 凸包面积的比例  不应该很大
     # print("asfasdfaaaaaaaaa", int(wh_ratio[1]))
-    if wh_ratio[1] < 10 and color_ratio < 0.8 or wh_ratio[1]:
+    if wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3):  # 颜色比例判断函数需要修改
+        #  特别长的不可能，1:2比例的红色比例不可能很高
+        print("wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3 )", wh_ratio[1], wh_ratio[1], color_ratio)
+        return 0
 
-        SomeThings_show = SomeThings.copy()
-        cv2.drawContours(SomeThings_show, contours, i, (0, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
-        cv2.imshow("SomeThings_show", SomeThings_show)
-        cv2.waitKey(0)
-
-        CropThing = Crop_cnt(frame, cnt)
-        cnts = divide_crop(CropThing, wh_ratio)
-        if wh_ratio[1] > 10:
-            return 0
-        else:
-            flag = 0
-            return 1
+    cnts = divide_crop(CropThing, wh_ratio)
+    if wh_ratio[1] > 10:
+        return 0
+    else:
+        flag = 0
+        return 1
 
     # cv2.drawContours(SomeThings_line, [box[0:2]], 0, (0, 0, 255), 2)   # 画外接矩形
     # cv2.imshow("minAreaRect(cnt)", SomeThings_line)
@@ -303,8 +388,8 @@ def find_mask(frame, color):
     blackUpper02 = np.array([180, 43, 45])  # 灰色基本没用
 
     redLower01 = np.array([0, 80, 80])  # 红色的阈值 标准H：0-10 and 160-179 S:43:255 V:46:255
-    redUpper01 = np.array([15, 255, 255])
-    redLower02 = np.array([125, 80, 80])  # 125 to 156
+    redUpper01 = np.array([10, 255, 255])
+    redLower02 = np.array([156, 80, 80])  # 125 to 156
     redUpper02 = np.array([180, 255, 255])
 
     greenLower = np.array([35, 80, 46])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
@@ -313,7 +398,7 @@ def find_mask(frame, color):
     blueLower = np.array([100, 80, 80])
     blueUpper = np.array([124, 255, 255])
 
-    yellowLower = np.array([5, 80, 46])  # 黄色的阈值 标准H：26:34 S:43:255 V:46:255
+    yellowLower = np.array([26, 80, 100])  # 黄色的阈值 标准H：26:34 S:43:255 V:46:255
     yellowUpper = np.array([34, 255, 255])  # 有的图 黄色变成红色的了
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -350,7 +435,7 @@ def find_mask(frame, color):
     return mask
 
 
-def find_ColorThings(frame, color, num):
+def find_ColorThings(frame, color, num, RETR=cv2.RETR_EXTERNAL):
     mask = find_mask(frame, color)
 
     mask = cv2.dilate(mask, None, iterations=1)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
@@ -362,19 +447,20 @@ def find_ColorThings(frame, color, num):
 
     # cv2.imshow("%d SomeThings:1R2G3B" % k, SomeThings)  # 显示感兴趣的颜色区域
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
-    ColorThings_er = cv2.morphologyEx(ColorThings, cv2.MORPH_OPEN, kernel)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))  # 直线提取    找到轮廓的时候忽略掉小目标 后续正确的小目标通过膨胀复原
+    ColorThings = cv2.morphologyEx(ColorThings, cv2.MORPH_OPEN, kernel)
 
     # cv2.imshow("line-result", ColorThings_er)
 
-    dst = cv2.GaussianBlur(ColorThings, (5, 5), 0)  # 高斯消除噪音
+    dst = cv2.GaussianBlur(ColorThings, (3, 3), 0)  # 高斯消除噪音
     gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)  # 转成灰色图像
     # cv2.imshow("gray image", gray)
 
-    ret, SomeBinary = cv2.threshold(gray, 125, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
-    # cloneImage, contours, heriachy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # 边界不是封闭的
-    cloneImage, contours, heriachy = cv2.findContours(SomeBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
-    return ColorThings, SomeBinary, contours
+    ret, SomeBinary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # 灰色图像二值化（变黑白图像）
+    # cloneImage, contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # 边界不是封闭的
+    # cloneImage, contours, hierarchy = cv2.findContours(SomeBinary, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+    cloneImage, contours, hierarchy = cv2.findContours(SomeBinary, RETR, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+    return SomeBinary, cloneImage, contours, hierarchy  # cloneImage 和 SomeBinary一模一样
 
 
 def contours_demo(img_path, save_path, min_s, max_s):
@@ -382,45 +468,48 @@ def contours_demo(img_path, save_path, min_s, max_s):
     mybuffer = 64
     pts = deque(maxlen=mybuffer)
     frame = cv2.imread(img_path)
-    frame = cv2.pyrMeanShiftFiltering(frame, 15, 15)
+    frame = cv2.GaussianBlur(frame, (3, 3), 0)  # 高斯消除噪音
+    # frame = cv2.pyrMeanShiftFiltering(frame, 15, 15)  # 神奇 但5秒处理一张图
+    # frame_best = frame.copy()
     # for color in ["red",  "blue", "black", "red+blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
-    for color in ["red"]:  # 分别单独处理三个颜色的结果
-        SomeThings, SomeBinary, contours = find_ColorThings(frame, color, num=0)  # num = 腐蚀的次数
+    for color in ["red", "green", "yellow", "blue"]:  # 分别单独处理三个颜色的结果
+
+        # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
+        # frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)
+
+        SomeBinary, SomeThings, contours, _ = find_ColorThings(frame, color, num=0)  # num = 腐蚀的次数
         # SomeThings = cv2.pyrMeanShiftFiltering( SomeThings, 15, 15)
-
         # cv2.imshow("firt SomeThings", SomeThings)
-        #
-        # kernel_01 = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 1))   # 直线提取
-        # kernel_02 = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 5))
-        # SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel_01)
-        # SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel_02)
-        # cv2.imshow("opencv-result", SomeThings)
+        # SomeThings = cv2.GaussianBlur(SomeThings, (5, 5), 0)  # 高斯消除噪音
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
+        SomeThings = cv2.morphologyEx(SomeThings, cv2.MORPH_OPEN, kernel)
 
+        # cv2.imshow("opencv-result", SomeThings)
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
         #     cv2.drawContours(SomeThings, contours, i, (255, 255, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
 
         # cv2.waitKey(0)  # ********************************
         # if 1 == 1:
         #     break
-        contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
-        # cv2.imshow("SomeThings", SomeThings)
-        # cv2.waitKey(0)  # ********************************
+        # contours.sort(key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)), reverse=True)
         # for i, contour in enumerate(contours):  # 将所有的轮廓添加到frame上
         #     cv2.drawContours(frame, contours, i, (0, 0, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
+        # cv2.imshow("SomeThings", SomeThings)
+        # cv2.waitKey(0)  # ********************************
 
-        if len(contours) > 0:  # 如果存在轮廓
+        if len(contours) < 1:  # 如果存在轮廓
             # contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
-            contours.sort(key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)), reverse=True)  # 根据轮毂的面积降序排列
-            for i in range(0, len(contours)):
-                # cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
-                # print("len(contours):", len(contours))
-                if cv2.contourArea(contours[i]) > 100:  # 面积判断
-
-
-                    detection(frame, SomeThings, contours[i], color, contours, i)  # 判断是否是 需要识别的对象， 是返回1 否为0
-                    # identify_light(SomeThings, contours[i], color, min_s, max_s)
-
-
+            print("len(contours) < 1 :", len(contours))
+            return -1
+        contours.sort(key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)), reverse=True)  # 根据轮毂的面积降序排列
+        for i in range(0, len(contours)):
+            # cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
+            # print("len(contours):", len(contours))
+            if cv2.contourArea(contours[i]) < 50:  # 面积判断
+                print("cv2.contourArea(contours[%d]) < 100 " % i, cv2.contourArea(contours[i]))
+                return -1
+            detection(frame, SomeThings, color, contours, i)  # 判断是否是 需要识别的对象， 是返回1 否为0
+            # identify_light(SomeThings, contours[i], color, min_s, max_s)
 
 
 if __name__ == "__main__":

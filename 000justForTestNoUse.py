@@ -1,3 +1,9 @@
+x,y,w,h = cv2.boundingRect(cnt)
+cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,0),5)
+
+
+
+
 # import cv2
 # import numpy as np
 print(int(-1))
