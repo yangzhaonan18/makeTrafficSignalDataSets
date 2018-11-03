@@ -122,6 +122,7 @@ def cal_color_area(BinColors, contours, hierarchy):  # 计算轮廓的面积。�
         print("len(contours) == 0:")
         return -1
     if len(contours) == 1:
+        print("len(contours) == 1:")
         return cv2.contourArea(contours[0])
     area_p = 0
     area_n = 0
@@ -129,10 +130,10 @@ def cal_color_area(BinColors, contours, hierarchy):  # 计算轮廓的面积。�
     j = 0
     flag = 1
     BinColors_show = BinColors.copy()
-    print("hierarchy", hierarchy)
+    print("hierarchy =", hierarchy)
     while i != -1:  # 遍历第一层所有的轮廓的编号  cv2.RETR_CCOMP 保证包住白色的轮廓是第一层，包住黑色的是第二层
         print("i =", i)
-        cv2.drawContours(BinColors_show, contours, i, (0, 255, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
+        cv2.drawContours(BinColors_show, contours, i, (0, 0, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
         cv2.imshow("cal_color_area//BinColors_show", BinColors_show)
         area_p += cv2.contourArea(contours[i])
         if hierarchy[0][i][0] != i + 1 and flag == 1:
@@ -140,15 +141,15 @@ def cal_color_area(BinColors, contours, hierarchy):  # 计算轮廓的面积。�
             flag = 0
         i = hierarchy[0][i][0]  # 同一层的编号是串联的，一个接一个
     print("area_p =", area_p)
-    while j != -1:  # 遍历第二层所有的轮廓的编号
+    while j != -1 and j < len(contours):  # 遍历第二层所有的轮廓的编号
         print("j =", j)
-        cv2.drawContours(BinColors_show, contours, j, (255, 255, 0), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
+        cv2.drawContours(BinColors_show, contours, j, (255, 255, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
         cv2.imshow("cal_color_area//BinColors_show", BinColors_show)
         area_n += cv2.contourArea(contours[j])
 
         j = hierarchy[0][j][0]
     print("area_n =", area_n)
-    print("area_p - area_n", area_p - area_n)
+    print("area_p - area_n =", area_p - area_n)
     return area_p - area_n
 
 
@@ -393,8 +394,8 @@ def find_mask(frame, color):
     redLower02 = np.array([156, 80, 80])  # 125 to 156
     redUpper02 = np.array([180, 255, 255])
 
-    greenLower = np.array([35, 80, 46])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
-    greenUpper = np.array([99, 255, 255])  # V 60 调整到了150
+    greenLower = np.array([50, 80, 80])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
+    greenUpper = np.array([95, 255, 255])  # V 60 调整到了150
 
     blueLower = np.array([100, 80, 80])
     blueUpper = np.array([124, 255, 255])
@@ -481,7 +482,7 @@ def contours_demo(img_path, save_path, min_s, max_s):
     # frame = cv2.pyrMeanShiftFiltering(frame, 15, 15)  # 神奇 但5秒处理一张图
     # frame_best = frame.copy()
     # for color in ["red",  "blue", "black", "red+blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
-    for color in ["red", "green", "yellow", "blue"]:  # 分别单独处理三个颜色的结果
+    for color in [ "green", "red", "yellow", "blue"]:  # 分别单独处理三个颜色的结果
 
         # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
         # frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)
@@ -509,14 +510,14 @@ def contours_demo(img_path, save_path, min_s, max_s):
         if len(contours) < 1:  # 排除不存在轮廓的情况
             # contours.sort(key=lambda cnt: cv2.contourArea(cnt), reverse=True)
             print("len(contours) < 1 :", len(contours))
-            return -1
+            continue
         contours.sort(key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)), reverse=True)  # 根据轮毂的面积降序排列
         for i in range(0, len(contours)):
             # cnt_max = max(contours, key=cv2.contourArea)  # 找到面积最大的轮廓
             # print("len(contours):", len(contours))
             if cv2.contourArea(contours[i]) < 50:  # 排除面积判断 < 50
                 print("cv2.contourArea(contours[%d]) < 100 " % i, cv2.contourArea(contours[i]))
-                return -1
+                continue
             detection(frame, BinColors, color, contours, i)  # 判断是否是 需要识别的对象， 是返回1 否为0
             # identify_light(SomeThings, contours[i], color, min_s, max_s)
 
