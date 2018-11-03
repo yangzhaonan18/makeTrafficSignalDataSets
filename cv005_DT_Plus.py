@@ -132,7 +132,7 @@ def cal_color_area(BinColors, contours, hierarchy):  # 计算轮廓的面积。�
     print("hierarchy", hierarchy)
     while i != -1:  # 遍历第一层所有的轮廓的编号  cv2.RETR_CCOMP 保证包住白色的轮廓是第一层，包住黑色的是第二层
         print("i =", i)
-        cv2.drawContours(BinColors_show, contours, i, (0, 0, 255), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+        cv2.drawContours(BinColors_show, contours, i, (0, 255, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
         cv2.imshow("cal_color_area//BinColors_show", BinColors_show)
         area_p += cv2.contourArea(contours[i])
         if hierarchy[0][i][0] != i + 1 and flag == 1:
@@ -142,7 +142,7 @@ def cal_color_area(BinColors, contours, hierarchy):  # 计算轮廓的面积。�
     print("area_p =", area_p)
     while j != -1:  # 遍历第二层所有的轮廓的编号
         print("j =", j)
-        cv2.drawContours(BinColors_show, contours, j, (0, 255, 0), 1)  # 最后一个数字表示线条的粗细 -1时表示填充
+        cv2.drawContours(BinColors_show, contours, j, (255, 255, 0), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
         cv2.imshow("cal_color_area//BinColors_show", BinColors_show)
         area_n += cv2.contourArea(contours[j])
 
