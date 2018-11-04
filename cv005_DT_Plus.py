@@ -232,12 +232,19 @@ def detection(frame, BinColors, color, contours, i):  # 判断是否是需要识
     color_ratio = cal_color_ratio(CropThing, color)  # 计算轮廓面积 与 凸包面积的比例  不应该很大
     # print("asfasdfaaaaaaaaa", int(wh_ratio[1]))
     if wh_ratio[1] > 10:  # 特别长的不可能，
-        print("wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3 )", wh_ratio[1], wh_ratio[1], color_ratio)
+        print("case0: wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3 )", wh_ratio[1], wh_ratio[1], color_ratio)
         return -1
-    if wh_ratio[1] > 1 and color_ratio > 0.9:  # 1:2 比例的红色比例不可能很高
-        print("detection//wh_ratio[1] > 1 and color_ratio > 0.9")
+    if wh_ratio[1] > 1 and color_ratio > 0.8:  # 红色的比例不可能很高
+        print("case1: detection//wh_ratio[1] > 1 and color_ratio > 0.9")
         return -1
-    cnts = divide_crop(CropThing, wh_ratio)
+    if wh_ratio[1] == 1 and color_ratio < 0.3:  # 正方的图形，只有可能是静止和红路灯 红色的比例不可能很低
+        print("case2: wh_ratio[1] == 1 and color_ratio < 0.5", wh_ratio[1] == 1 and color_ratio < 0.5)
+        return -1
+    if color == "red" and wh_ratio[1] == 1 and color_ratio < 0.6:  # 正方的图形中，绿色的面积不应该很低
+        return -1
+    if wh_ratio[1] > 1:
+        cnts = divide_crop(CropThing, wh_ratio)
+
 
     return 1
 
@@ -397,8 +404,8 @@ def find_mask(frame, color):
     greenLower = np.array([50, 80, 80])  # 绿色的阈值 标准H：35:77 S:43:255 V:46:255
     greenUpper = np.array([95, 255, 255])  # V 60 调整到了150
 
-    blueLower = np.array([100, 80, 80])
-    blueUpper = np.array([124, 255, 255])
+    blueLower = np.array([105, 120, 80])  # 蓝H:100:124 紫色H:125:155
+    blueUpper = np.array([130, 255, 255])
 
     yellowLower = np.array([26, 80, 100])  # 黄色的阈值 标准H：26:34 S:43:255 V:46:255
     yellowUpper = np.array([34, 255, 255])  # 有的图 黄色变成红色的了
@@ -440,21 +447,21 @@ def find_mask(frame, color):
 def find_ColorThings(frame, color, num, RETR=cv2.RETR_EXTERNAL):
     mask = find_mask(frame, color)
 
-    mask = cv2.dilate(mask, None, iterations=1)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
+    mask = cv2.dilate(mask, None, iterations=2)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
     mask = cv2.erode(mask, None, iterations=num)  # 腐蚀操作
-    ColorThings = cv2.bitwise_and(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
+    BinColors = cv2.bitwise_and(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
     # an_ColorThings = cv2.bitwise_not(frame, frame, mask=mask)  # 提取感兴趣的颜色区域  背景黑色+彩色的图像
     # cv2.imshow("an_ColorThings:", an_ColorThings)
     # cv2.waitKey(0)  # ********************************
 
-    # cv2.imshow("%d BinColor:1R2G3B" % k, BinColor)  # 显示感兴趣的颜色区域
+    # cv2.imshow("First BinColors",  BinColors)  # 显示感兴趣的颜色区域
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))  # 直线提取    找到轮廓的时候忽略掉小目标 后续正确的小目标通过膨胀复原
-    ColorThings = cv2.morphologyEx(ColorThings, cv2.MORPH_OPEN, kernel)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取    找到轮廓的时候忽略掉小目标 后续正确的小目标通过膨胀复原
+    BinColors = cv2.morphologyEx(BinColors, cv2.MORPH_OPEN, kernel)
 
     # cv2.imshow("line-result", ColorThings_er)
 
-    dst = cv2.GaussianBlur(ColorThings, (3, 3), 0)  # 彩色图时 高斯消除噪音
+    dst = cv2.GaussianBlur(BinColors, (3, 3), 0)  # 彩色图时 高斯消除噪音
     gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)  # 转成灰色图像
     # cv2.imshow("gray image", gray)
 
@@ -463,7 +470,7 @@ def find_ColorThings(frame, color, num, RETR=cv2.RETR_EXTERNAL):
     # cloneImage, contours, hierarchy = cv2.findContours(BinThings, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
     BinThings, contours, hierarchy = cv2.findContours(BinThings, RETR, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))  # 黑白图时 直线消除 小斑点
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))  # 黑白图时 直线消除 小斑点
     BinThings = cv2.morphologyEx(BinThings, cv2.MORPH_OPEN, kernel)  # 输出是二值化的图片， 后面用来作为轮廓使用 吧！！！！！
     BinThings, contours, hierarchy = cv2.findContours(BinThings, RETR, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
 
@@ -482,7 +489,7 @@ def contours_demo(img_path, save_path, min_s, max_s):
     # frame = cv2.pyrMeanShiftFiltering(frame, 15, 15)  # 神奇 但5秒处理一张图
     # frame_best = frame.copy()
     # for color in ["red",  "blue", "black", "red+blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
-    for color in [ "green", "red", "yellow", "blue"]:  # 分别单独处理三个颜色的结果
+    for color in [ "red", "blue",  "green", "yellow"]:  # 分别单独处理三个颜色的结果
 
         # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
         # frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)

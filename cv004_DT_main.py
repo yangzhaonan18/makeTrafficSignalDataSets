@@ -310,11 +310,7 @@ def watershed(img_path):
     ret, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     # cv2.imshow("~binary image:", ~binary)
 
-
-
     binary = ~binary.copy()
-
-
 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     mb = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=2)
