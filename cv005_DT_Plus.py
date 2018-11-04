@@ -7,24 +7,67 @@ import numpy as np
 
 
 
+# def find_crop_center(BinThings_show, BinThings, contours):
+def find_crop_center(CropThing, color):
+    CropThing_show = CropThing.copy()
+    BinThings, BinColors, contours, hierarchy = find_ColorThings(CropThing, color, num=0)
+    i = contours.index(max(contours, key=cv2.contourArea))  # 列表最大数的 索引
+    # contours[i] = cv2.convexHull(contours[i])  # 不能是引用外包的填充方法，外面的线条会干扰 凸包的生成
+    img01 = cv2.drawContours(BinThings, contours, i, (0, 0, 255), -1)
+    cv2.imshow("img01", img01)
 
-def divide_crop(CropThing, wh_ratio):
-    ColorThings_divide = CropThing.copy()  # 显示图片
-    cv2.imshow("divide_crop", ColorThings_divide)
+    img01 = cv2.cvtColor(img01, cv2.COLOR_BGR2GRAY)
+    dist = cv2.distanceTransform(img01, cv2.DIST_L2, 3)  # 单通道灰度图才可以转化成 彩色图不行
+    dist_output = cv2.normalize(dist, 0, 1.0, cv2.NORM_MINMAX)
+    cv2.imshow("distance-t", dist_output * 50)
+
+    # ret, surface = cv2.threshold(dist, 1, dist.max()*0.5, cv2.THRESH_BINARY)
+    ret, surface = cv2.threshold(dist,  dist.max() * 0.85, 255, cv2.THRESH_BINARY)  # 只保留中心点周围的图
+
+    surface_fg = np.uint8(surface)
+    BinThings, contours, hierarchy = cv2.findContours(surface_fg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+    print("asdf", len(contours))
+    x_list = []  # 中心的x坐标
+    y_list = []  # 中心的y坐标
+    center = []
+    for k in range(len(contours)):
+        cnt = contours[k]
+        M = cv2.moments(cnt)
+        cx = int(M['m10'] / M['m00'])
+        cy = int(M['m01'] / M['m00'])
+        x_list.append(cx)
+        y_list.append(cy)
+        center.append((cx, cy))
+    print("before center is :", center)
+    part = 0.5  # 边缘部分比例大于part的都需要找出（返回中心坐标和半径）
+    if np.var(x_list, axis=0) > np.var(y_list, axis=0):  # 横向有多个图标，找到半径
+        print(" heng " * 10)
+        center = sorted(center, key=lambda x: x[0])   # 升序排列
+        radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))
+        if center[0][0] - radius > 2 * part * radius:  # 左边有大半圆的话
+            center.insert(0, (center[0][0] - 2 * radius, center[0][1]))
+        if BinThings.shape[1] - center[-1][0] - radius > 2 * part * radius:   # 有边有大半圆的话
+            center.append((center[-1][0] + 2 * radius, center[-1][1]))
+    else:
+        print(" shu " * 10)
+        center = sorted(center, key=lambda x: x[1])  # 升序排列
+        radius = int((center[-1][1] - center[0][1]) / (2 * (len(contours) - 1)))
+        if center[0][1] - radius > 2 * part * radius:  # 上边有大半圆的话
+            center.insert(0, (center[0][0], center[0][1] - 2 * radius))
+        if BinThings.shape[0] - center[-1][1] - radius > 2 * part * radius:   # 下边有大半圆的话
+            center.append((center[-1][0], center[-1][1] + 2 * radius))
+
+
+    for i in range(len(center)):
+        cv2.circle(CropThing_show, center[i], int(radius), (0, 0, 255), 2)  # 画圆
+    cv2.imshow("CropThing_show",  CropThing_show)
+    print("after center is :", center)
     cv2.waitKey(0)
+    return center, radius
 
-    # if wh_ratio[0] == 0:
-    #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 1))  # 水平消除模糊
-    #     dst_divid = cv2.morphologyEx(CropThing, cv2.MORPH_OPEN, kernel)
-    #     cv2.imshow("dst_divid:", dst_divid)
-    #     cv2.waitKey(0)
-    # else:
-    #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 50))  # 水平消除模糊
-    #     dst_divid = cv2.morphologyEx(CropThing, cv2.MORPH_OPEN, kernel)
-    #     cv2.imshow("dst_divid:", dst_divid)
-    #     cv2.waitKey(0)
 
-    return "asdfa"
+
+
 
 
 def cal_rect_xy(box):  # box是倾斜矩阵四个点的坐标
@@ -243,7 +286,7 @@ def detection(frame, BinColors, color, contours, i):  # 判断是否是需要识
     if color == "red" and wh_ratio[1] == 1 and color_ratio < 0.6:  # 正方的图形中，绿色的面积不应该很低
         return -1
     if wh_ratio[1] > 1:
-        cnts = divide_crop(CropThing, wh_ratio)
+        center, radius = find_crop_center(CropThing, color)
 
 
     return 1
@@ -444,7 +487,7 @@ def find_mask(frame, color):
     return mask
 
 
-def find_ColorThings(frame, color, num, RETR=cv2.RETR_EXTERNAL):
+def find_ColorThings(frame, color, num=0, RETR=cv2.RETR_EXTERNAL):
     mask = find_mask(frame, color)
 
     mask = cv2.dilate(mask, None, iterations=2)  # 膨胀操作，其实先腐蚀再膨胀的效果是开运算，去除噪点
@@ -489,7 +532,7 @@ def contours_demo(img_path, save_path, min_s, max_s):
     # frame = cv2.pyrMeanShiftFiltering(frame, 15, 15)  # 神奇 但5秒处理一张图
     # frame_best = frame.copy()
     # for color in ["red",  "blue", "black", "red+blue", "green", "yellow", "green+yellow",]:  # 分别单独处理三个颜色的结果
-    for color in [ "red", "blue",  "green", "yellow"]:  # 分别单独处理三个颜色的结果
+    for color in ["red", "blue",  "green", "yellow"]:  # 分别单独处理三个颜色的结果
 
         # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # 直线提取
         # frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)

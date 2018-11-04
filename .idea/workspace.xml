@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52863333-ba22-4ef1-82f1-490cbaa593e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/004just.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/005just.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cv004_DT_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv004_DT_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/004just.py" beforeDir="false" afterPath="$PROJECT_DIR$/004just.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cv005_DT_Plus.py" beforeDir="false" afterPath="$PROJECT_DIR$/cv005_DT_Plus.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -98,7 +95,7 @@
         <counts>
           <entry key="dummy" value="64" />
           <entry key="md" value="125" />
-          <entry key="py" value="27640" />
+          <entry key="py" value="27916" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -106,7 +103,7 @@
         <counts>
           <entry key="Markdown" value="125" />
           <entry key="PLAIN_TEXT" value="64" />
-          <entry key="Python" value="27640" />
+          <entry key="Python" value="27916" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -114,24 +111,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="161" column="11" selection-start-line="161" selection-start-column="8" selection-end-line="161" selection-end-column="11" />
+            <state relative-caret-position="350">
+              <caret line="59" lean-forward="true" selection-start-line="59" selection-end-line="59" />
               <folding>
                 <element signature="e#24#53#0" expanded="true" />
-                <element signature="e#140#764#0" />
+                <element signature="e#1494#1954#0" />
                 <element signature="e#811#1320#0" />
                 <element signature="e#811#878#0" />
                 <element signature="e#1373#3530#0" />
                 <element signature="e#1373#1456#1" />
+                <element signature="e#3595#4372#0" />
                 <element signature="e#4464#5957#0" />
                 <element signature="e#7585#8682#0" />
                 <element signature="e#14729#15048#0" />
                 <element signature="e#15096#15551#0" />
                 <element signature="e#22041#22893#0" />
-                <marker date="1541303252030" expanded="true" signature="8737:8767" ph="..." />
+                <marker date="1541321657542" expanded="true" signature="10835:10865" ph="..." />
               </folding>
             </state>
           </provider>
@@ -170,13 +168,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/004just.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="155" column="46" selection-start-line="155" selection-start-column="46" selection-end-line="155" selection-end-column="46" />
+            <state relative-caret-position="525">
+              <caret line="153" column="38" lean-forward="true" selection-start-line="153" selection-start-column="3" selection-end-line="153" selection-end-column="38" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#65#1986#0" />
+                <element signature="e#2059#3956#0" />
+                <element signature="e#4967#5173#0" />
+                <element signature="e#5333#5793#0" />
+                <element signature="e#6313#6772#0" />
+                <marker date="1541319993713" expanded="true" signature="6517:6546" ph="..." />
+                <marker date="1541319993713" expanded="true" signature="6837:6848" ph="..." />
               </folding>
             </state>
           </provider>
@@ -263,7 +268,6 @@
       <find>cv2.waitKey(0)</find>
       <find>and</find>
       <find>cv2.bitwise</find>
-      <find>find_ColorThings</find>
       <find>water</find>
       <find>find_Co</find>
       <find>(0, 0, 255)</find>
@@ -275,6 +279,7 @@
       <find>画圆</find>
       <find>max</find>
       <find>质</find>
+      <find>find_ColorThings</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -331,9 +336,9 @@
         <option value="$PROJECT_DIR$/000justForTestNoUse.py" />
         <option value="$PROJECT_DIR$/003just.py" />
         <option value="$PROJECT_DIR$/cv004_DT_main.py" />
-        <option value="$PROJECT_DIR$/cv005_DT_Plus.py" />
         <option value="$PROJECT_DIR$/005just.py" />
         <option value="$PROJECT_DIR$/004just.py" />
+        <option value="$PROJECT_DIR$/cv005_DT_Plus.py" />
       </list>
     </option>
   </component>
@@ -391,7 +396,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.004just">
+  <component name="RunManager" selected="Python.cv005_DT_Plus">
     <configuration name="002just" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myTSdataset" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -572,9 +577,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.cv005_DT_Plus" />
         <item itemvalue="Python.004just" />
         <item itemvalue="Python.005just" />
-        <item itemvalue="Python.cv005_DT_Plus" />
         <item itemvalue="Python.003just" />
         <item itemvalue="Python.002just" />
       </list>
@@ -939,27 +944,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="161" column="11" selection-start-line="161" selection-start-column="8" selection-end-line="161" selection-end-column="11" />
-          <folding>
-            <element signature="e#24#53#0" expanded="true" />
-            <element signature="e#140#764#0" />
-            <element signature="e#811#1320#0" />
-            <element signature="e#811#878#0" />
-            <element signature="e#1373#3530#0" />
-            <element signature="e#1373#1456#1" />
-            <element signature="e#4464#5957#0" />
-            <element signature="e#7585#8682#0" />
-            <element signature="e#14729#15048#0" />
-            <element signature="e#15096#15551#0" />
-            <element signature="e#22041#22893#0" />
-            <marker date="1541303252030" expanded="true" signature="8737:8767" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/001just.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="69">
@@ -979,10 +963,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/004just.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="155" column="46" selection-start-line="155" selection-start-column="46" selection-end-line="155" selection-end-column="46" />
+        <state relative-caret-position="525">
+          <caret line="153" column="38" lean-forward="true" selection-start-line="153" selection-start-column="3" selection-end-line="153" selection-end-column="38" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#65#1986#0" />
+            <element signature="e#2059#3956#0" />
+            <element signature="e#4967#5173#0" />
+            <element signature="e#5333#5793#0" />
+            <element signature="e#6313#6772#0" />
+            <marker date="1541319993713" expanded="true" signature="6517:6546" ph="..." />
+            <marker date="1541319993713" expanded="true" signature="6837:6848" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cv005_DT_Plus.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="59" lean-forward="true" selection-start-line="59" selection-end-line="59" />
+          <folding>
+            <element signature="e#24#53#0" expanded="true" />
+            <element signature="e#1494#1954#0" />
+            <element signature="e#811#1320#0" />
+            <element signature="e#811#878#0" />
+            <element signature="e#1373#3530#0" />
+            <element signature="e#1373#1456#1" />
+            <element signature="e#3595#4372#0" />
+            <element signature="e#4464#5957#0" />
+            <element signature="e#7585#8682#0" />
+            <element signature="e#14729#15048#0" />
+            <element signature="e#15096#15551#0" />
+            <element signature="e#22041#22893#0" />
+            <marker date="1541321657542" expanded="true" signature="10835:10865" ph="..." />
           </folding>
         </state>
       </provider>

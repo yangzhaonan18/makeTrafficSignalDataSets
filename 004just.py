@@ -93,19 +93,74 @@ def find_ColorThings(frame, color, num, RETR=cv2.RETR_EXTERNAL):
     return BinColors, BinThings, contours, hierarchy
 
 
+def find_center(BinThings_show, BinThings, contours):
+    i = contours.index(max(contours, key=cv2.contourArea))  # 列表最大数的 索引
+    # contours[i] = cv2.convexHull(contours[i])  # 不能是引用外包的填充方法，外面的线条会干扰 凸包的生成
+    img01 = cv2.drawContours(BinThings, contours, i, (0, 0, 255), -1)
+    cv2.imshow("img01", img01)
+
+    img01 = cv2.cvtColor(img01, cv2.COLOR_BGR2GRAY)
+    dist = cv2.distanceTransform(img01, cv2.DIST_L2, 3)  # 单通道灰度图才可以转化成 彩色图不行
+    dist_output = cv2.normalize(dist, 0, 1.0, cv2.NORM_MINMAX)
+    cv2.imshow("distance-t", dist_output*50)
+
+    # ret, surface = cv2.threshold(dist, 1, dist.max()*0.5, cv2.THRESH_BINARY)
+    ret, surface = cv2.threshold(dist,  dist.max() * 0.85, 255, cv2.THRESH_BINARY)  # 只保留中心点周围的图
+
+    surface_fg = np.uint8(surface)
+    BinThings, contours, hierarchy = cv2.findContours(surface_fg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
+    print("asdf", len(contours))
+    x_list = []  # 中心的x坐标
+    y_list = []  # 中心的y坐标
+    center = []
+    for k in range(len(contours)):
+        cnt = contours[k]
+        M = cv2.moments(cnt)
+        cx = int(M['m10'] / M['m00'])
+        cy = int(M['m01'] / M['m00'])
+        x_list.append(cx)
+        y_list.append(cy)
+        center.append((cx, cy))
+    print("before center is :", center)
+    part = 0.5  # 边缘部分比例大于part的都需要找出（返回中心坐标和半径）
+    if np.var(x_list, axis=0) > np.var(y_list, axis=0):  # 横向有多个图标，找到半径
+        print(" heng " * 10)
+        center = sorted(center, key=lambda x: x[0])   # 升序排列
+        radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))
+        if center[0][0] - radius > 2 * part * radius:  # 左边有大半圆的话
+            center.insert(0, (center[0][0] - 2 * radius, center[0][1]))
+        if BinThings.shape[1] - center[-1][0] - radius > 2 * part * radius:   # 有边有大半圆的话
+            center.append((center[-1][0] + 2 * radius, center[-1][1]))
+    else:
+        print(" shu " * 10)
+        center = sorted(center, key=lambda x: x[1])  # 升序排列
+        radius = int((center[-1][1] - center[0][1]) / (2 * (len(contours) - 1)))
+        if center[0][1] - radius > 2 * part * radius:  # 上边有大半圆的话
+            center.insert(0, (center[0][0], center[0][1] - 2 * radius))
+        if BinThings.shape[0] - center[-1][1] - radius > 2 * part * radius:   # 下边有大半圆的话
+            center.append((center[-1][0], center[-1][1] + 2 * radius))
+
+
+    for i in range(len(center)):
+        cv2.circle(BinThings_show, center[i], int(radius), (0, 0, 255), 2)  # 画圆
+    cv2.imshow("BinThings_show",  BinThings_show)
+    print("after center is :", center)
+    cv2.waitKey(0)
+    return center, radius
+
 
 def watershed(img_path):
-    BinThings = cv2.imread(img_path)
-    BinThings_show = BinThings.copy()
-    BinThings, BinColors, contours, hierarchy = find_ColorThings(BinThings, "red",  num=0)
-
-
+    SomeThings = cv2.imread(img_path)
+    BinThings_show = SomeThings.copy()
+    BinThings, BinColors, contours, hierarchy = find_ColorThings(SomeThings, "red",  num=0)
     print(BinThings.shape)
 
-    blurred = BinThings
-    blurred = cv2.pyrMeanShiftFiltering(BinThings, 10, 100)
-    gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
-    ret, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    center, radius = find_center(BinThings_show, BinThings, contours)
+    #
+    # blurred = BinThings
+    # blurred = cv2.pyrMeanShiftFiltering(BinThings, 10, 100)
+    # gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+    # ret, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     # cv2.imshow("~binary image:", ~binary)
 
     # binary = ~binary.copy()
@@ -123,95 +178,6 @@ def watershed(img_path):
     #     cv2.circle(BinThings, (i[0], i[1]), 2, (255, 0, 0), 2)
     # cv2.imshow("circle", circles)
     # contours.sort(key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)), reverse=True)
-    i = contours.index(max(contours, key=cv2.contourArea))  # 列表最大数的 索引
-
-    # contours[i] = cv2.convexHull(contours[i])  # 不能是引用外包的填充方法，外面的线条会干扰 凸包的生成
-
-    img01 = cv2.drawContours(BinThings, contours, i, (0, 0, 255), -1)
-    cv2.imshow("img01", img01)
-
-    img01 = cv2.cvtColor(img01, cv2.COLOR_BGR2GRAY)
-    dist = cv2.distanceTransform(img01, cv2.DIST_L2, 3)  # 单通道灰度图才可以转化成 彩色图不行
-    dist_output = cv2.normalize(dist, 0, 1.0, cv2.NORM_MINMAX)
-    cv2.imshow("distance-t", dist_output*50)
-
-    # ret, surface = cv2.threshold(dist, 1, dist.max()*0.5, cv2.THRESH_BINARY)
-    ret, surface = cv2.threshold(dist,  dist.max() * 0.85, 255, cv2.THRESH_BINARY)
-
-    surface_fg = np.uint8(surface)
-    BinThings, contours, hierarchy = cv2.findContours(surface_fg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
-    print("asdf", len(contours))
-    x_list = []  # 中心的x坐标
-    y_list = []  # 中心的y坐标
-    center = []
-    for k in range(len(contours)):
-        cnt = contours[k]
-        M = cv2.moments(cnt)
-        cx = int(M['m10'] / M['m00'])
-        cy = int(M['m01'] / M['m00'])
-        x_list.append(cx)
-        y_list.append(cy)
-        center.append((cx, cy))
-    print("center:", center)
-    part = 0.5  # 边缘部分比例大于part的都需要找出（返回中心坐标和半径）
-    if np.var(x_list, axis=0) > np.var(y_list, axis=0):  # 横向有多个图标，找到半径
-        print("np.var(x_list, axis=0), np.var(y_list, axis=0) =", np.var(x_list, axis=0), np.var(y_list, axis=0))
-        print(" heng " * 10)
-        center = sorted(center, key=lambda x: x[0])   # 升序排列
-        radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))
-
-        print("radius:",  radius)
-        print("center[0] : ", center[0])
-        print("center[-1] : ", center[-1])
-        print("BinThings.shape[1]", BinThings.shape[1])  # 0 是高度 1 是宽度
-
-        if center[0][0] - radius > 2 * part * radius:  # 左边有大半圆的话
-            print("asdfadf")
-            center.insert(0, (center[0][0] - 2 * radius, center[0][1]))
-        if BinThings.shape[1] - center[-1][0] - radius > 2 * part * radius:   # 有边有大半圆的话
-            print("asdfaaaaaaaaaaaaaadf")
-            center.append((center[-1][0] + 2 * radius, center[-1][1]))
-
-        # print("radius:", radius)
-        # # print("center[0] : ", center[0])
-        # print("center[-1] : ", center[-1])
-
-    else:
-        print(" shu " * 10)
-        center = sorted(center, key=lambda x: x[1])  # 升序排列
-        radius = int((center[-1][1] - center[0][1]) / (2 * (len(contours) - 1)))
-
-        if center[0][1] - radius > 2 * part * radius:  # 上边有大半圆的话
-            print("asdfadf")
-            center.insert(0, (center[0][0], center[0][1] - 2 * radius))
-        if BinThings.shape[0] - center[-1][1] - radius > 2 * part * radius:   # 下边有大半圆的话
-            print("asdfaaaaaaaaaaaaaadf")
-            center.append((center[-1][0], center[-1][1] + 2 * radius))
-
-
-        print("radius:", radius)
-        print("center[0] : ", center[0])
-        print("center[-1] : ", center[-1])
-
-    for i in range(len(center)):
-        cv2.circle(BinThings_show, center[i], int(radius), (0, 0, 255), 2)  # 画圆
-
-    cv2.imshow("surface-bin", surface)
-    cv2.imshow("BinThings_show", BinThings_show)
-
-    # surface_fg = np.uint8(surface)
-
-
-    # unknown = cv2.subtract(sure_bg, surface_fg)
-    # ret, markers = cv2.connectedComponents(surface_fg)
-    # print("ret", ret, )
-    #
-    # markers = markers + 1
-    # markers[unknown == 255] = 0
-    # markers = cv2.watershed(BinThings, markers=markers)
-    # BinThings[markers == -1] = [0, 0, 255]
-    # cv2.imshow("result:", BinThings)
-    cv2.waitKey(0)
 
 
 if __name__ == "__main__":
