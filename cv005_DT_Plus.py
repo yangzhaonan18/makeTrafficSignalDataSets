@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-# def find_crop_center(BinThings_show, BinThings, contours):
+
 def find_crop_center(CropThing, color):
     CropThing_show = CropThing.copy()
     BinThings, BinColors, contours, hierarchy = find_ColorThings(CropThing, color, num=0)
@@ -22,52 +22,52 @@ def find_crop_center(CropThing, color):
     cv2.imshow("distance-t", dist_output * 50)
 
     # ret, surface = cv2.threshold(dist, 1, dist.max()*0.5, cv2.THRESH_BINARY)
-    ret, surface = cv2.threshold(dist,  dist.max() * 0.85, 255, cv2.THRESH_BINARY)  # 只保留中心点周围的图
+    ret, surface = cv2.threshold(dist,  dist.max() * 0.8, 255, cv2.THRESH_BINARY)  # 只保留中心点周围的图
 
     surface_fg = np.uint8(surface)
     BinThings, contours, hierarchy = cv2.findContours(surface_fg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
     print("asdf", len(contours))
     x_list = []  # 中心的x坐标
     y_list = []  # 中心的y坐标
-    center = []
-    for k in range(len(contours)):
-        cnt = contours[k]
-        M = cv2.moments(cnt)
-        cx = int(M['m10'] / M['m00'])
-        cy = int(M['m01'] / M['m00'])
-        x_list.append(cx)
-        y_list.append(cy)
-        center.append((cx, cy))
-    print("before center is :", center)
-    part = 0.5  # 边缘部分比例大于part的都需要找出（返回中心坐标和半径）
-    if np.var(x_list, axis=0) > np.var(y_list, axis=0):  # 横向有多个图标，找到半径
-        print(" heng " * 10)
-        center = sorted(center, key=lambda x: x[0])   # 升序排列
-        radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))
-        if center[0][0] - radius > 2 * part * radius:  # 左边有大半圆的话
-            center.insert(0, (center[0][0] - 2 * radius, center[0][1]))
-        if BinThings.shape[1] - center[-1][0] - radius > 2 * part * radius:   # 有边有大半圆的话
-            center.append((center[-1][0] + 2 * radius, center[-1][1]))
-    else:
-        print(" shu " * 10)
-        center = sorted(center, key=lambda x: x[1])  # 升序排列
-        radius = int((center[-1][1] - center[0][1]) / (2 * (len(contours) - 1)))
-        if center[0][1] - radius > 2 * part * radius:  # 上边有大半圆的话
-            center.insert(0, (center[0][0], center[0][1] - 2 * radius))
-        if BinThings.shape[0] - center[-1][1] - radius > 2 * part * radius:   # 下边有大半圆的话
-            center.append((center[-1][0], center[-1][1] + 2 * radius))
+    center = []  # 中心的坐标
+    radius = -1
+    try:
+        for k in range(len(contours)):
+            cnt = contours[k]
+            M = cv2.moments(cnt)
+            cx = int(M['m10'] / M['m00'])
+            cy = int(M['m01'] / M['m00'])
+            x_list.append(cx)
+            y_list.append(cy)
+            center.append((cx, cy))
+        print("before center is :", center)
+        part = 0.5  # 边缘部分比例大于part的都需要找出（返回中心坐标和半径）
+        if np.var(x_list, axis=0) > np.var(y_list, axis=0):  # 横向有多个图标，找到半径
+            print(" heng " * 10)
+            center = sorted(center, key=lambda x: x[0])   # 升序排列
+            radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))
+            if center[0][0] - radius > 2 * part * radius:  # 左边有大半圆的话
+                center.insert(0, (center[0][0] - 2 * radius, center[0][1]))
+            if BinThings.shape[1] - center[-1][0] - radius > 2 * part * radius:   # 有边有大半圆的话
+                center.append((center[-1][0] + 2 * radius, center[-1][1]))
+        else:
+            print(" shu " * 10)
+            center = sorted(center, key=lambda x: x[1])  # 升序排列
+            radius = int((center[-1][1] - center[0][1]) / (2 * (len(contours) - 1)))
+            if center[0][1] - radius > 2 * part * radius:  # 上边有大半圆的话
+                center.insert(0, (center[0][0], center[0][1] - 2 * radius))
+            if BinThings.shape[0] - center[-1][1] - radius > 2 * part * radius:   # 下边有大半圆的话
+                center.append((center[-1][0], center[-1][1] + 2 * radius))
 
 
-    for i in range(len(center)):
-        cv2.circle(CropThing_show, center[i], int(radius), (0, 0, 255), 2)  # 画圆
-    cv2.imshow("CropThing_show",  CropThing_show)
-    print("after center is :", center)
-    cv2.waitKey(0)
-    return center, radius
-
-
-
-
+        for i in range(len(center)):
+            cv2.circle(CropThing_show, center[i], int(radius), (0, 0, 255), 2)  # 画圆
+        cv2.imshow("CropThing_show",  CropThing_show)
+        print("after center is :", center)
+        cv2.waitKey(0)
+        return center, radius
+    except:
+        return center, radius
 
 
 def cal_rect_xy(box):  # box是倾斜矩阵四个点的坐标
@@ -265,27 +265,41 @@ def cal_wh_ratio(cnt):
 
 
 def detection(frame, BinColors, color, contours, i):  # 判断是否是需要识别的对象 是返回1 否为0
+    """
+    :param frame:  一张没有处理过的原始图片
+    :param BinColors:  经过颜色选择 二值化处理之后对应彩色部分的图片
+    :param color:  当前处理的颜色
+    :param contours:  当前颜色提取出的所有轮廓
+    :param i: 正在处理的轮廓下表号
+    :return: -1 表示当前编号对应的轮廓是不需要的后续对象（直接放弃的对象），1 表示是需要后续分类的对象
+    """
     # 输入只有一个轮廓
     BinColors_show = BinColors.copy()
     cv2.drawContours(BinColors_show, contours, i, (0, 255, 255), 2)  # 最后一个数字表示线条的粗细 -1时表示填充
-    cv2.imshow(" detection/BinColors_show", BinColors_show)
+    cv2.imshow(" detection/BinColors_show", BinColors_show)  # 二值彩图上显示当前处理的轮廓
 
-    wh_ratio = cal_wh_ratio(contours[i])  # 判断外接矩形的长宽比例   不应该很大
+    wh_ratio = cal_wh_ratio(contours[i])  # 返回轮廓的比例 [1,判断外接矩形的长宽比例   不应该很大
     CropThing = Crop_cnt(frame, contours[i], wh_ratio)  # 裁剪图片， 将图片变成水平的
     color_ratio = cal_color_ratio(CropThing, color)  # 计算轮廓面积 与 凸包面积的比例  不应该很大
-    # print("asfasdfaaaaaaaaa", int(wh_ratio[1]))
-    if wh_ratio[1] > 10:  # 特别长的不可能，
-        print("case0: wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3 )", wh_ratio[1], wh_ratio[1], color_ratio)
+
+    if wh_ratio[1] > 9:  # 不可能特别长
+        print("case: wh_ratio[1] > 10 or (wh_ratio[1] > 1 and color_ratio > 0.3 )", wh_ratio[1], wh_ratio[1], color_ratio)
+        return -1
+    if wh_ratio[1] > 3 and color == "blue":  # 蓝色的标志不应该很长 很宽
+        print("case:wh_ratio[1] > 3 and color == \"blue\"")
+        return -1
+    if wh_ratio[1] > 1 and color == "green":  # 蓝色的标志不应该很长 很宽
+        print("wh_ratio[1] > 1 and color == \"green\"")
         return -1
     if wh_ratio[1] > 1 and color_ratio > 0.8:  # 红色的比例不可能很高
-        print("case1: detection//wh_ratio[1] > 1 and color_ratio > 0.9")
+        print("case: detection//wh_ratio[1] > 1 and color_ratio > 0.9")
         return -1
     if wh_ratio[1] == 1 and color_ratio < 0.3:  # 正方的图形，只有可能是静止和红路灯 红色的比例不可能很低
-        print("case2: wh_ratio[1] == 1 and color_ratio < 0.5", wh_ratio[1] == 1 and color_ratio < 0.5)
+        print("case: wh_ratio[1] == 1 and color_ratio < 0.5", wh_ratio[1] == 1 and color_ratio < 0.5)
         return -1
     if color == "red" and wh_ratio[1] == 1 and color_ratio < 0.6:  # 正方的图形中，绿色的面积不应该很低
         return -1
-    if wh_ratio[1] > 1:
+    if wh_ratio[1] > 1 and color == "red":
         center, radius = find_crop_center(CropThing, color)
 
 
