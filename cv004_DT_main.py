@@ -312,6 +312,8 @@ def watershed(img_path):
 
     binary = ~binary.copy()
 
+
+
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     mb = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=2)
 
