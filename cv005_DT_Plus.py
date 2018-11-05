@@ -6,6 +6,65 @@ import cv2
 import numpy as np
 
 
+def find_center(CropThing, center, direction, part=0.1):
+    """
+    :param CropThing:
+    :param center:列表
+    :param direction:  0 横向 1 纵向
+    :return:
+    """
+    radius = float("inf")
+    if len(center) > 1:  # 处理检测到多个圆的情况，查看是否中间有漏检
+        center = sorted(center, key=lambda x: x[direction])  # 升序排列
+        print("sorted center", center)
+        # radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))  # 中间有缺点时，不能使用
+        for i in range(1, len(center)):  # 找到的两个圆心的最近距离/2
+            if (center[i][direction] - center[i-1][direction]) / 2 < radius:
+                radius = int((center[i][direction] - center[i-1][direction]) / 2)
+
+        num = int(2 * radius / min(CropThing.shape[0], CropThing.shape[1]) + 0.5)  # 转成四舍五入 调成0.纠正一点图片尺寸带来的误差
+        # 判断这个变径是否是对的，num = 1表示对，=2表示中间有一个圆的空隙，=3表示有两个圆的间隙
+
+        radius = int(radius / num)  # 纠正误有漏检圆的半径值
+        radius = min(radius, CropThing.shape[0] / 2, CropThing.shape[1] / 2)
+
+        for i in range(1, len(center)):  # 查找任意两个圆中间存在空缺圆的情况
+            if (center[i][direction] - center[i-1][direction]) > int(3 * radius) and (center[i][direction] - center[i-1][
+                direction]) < int( 5 * radius):  # 这是中间空缺一个圆的情况
+                center.insert(i, (int((center[i][0] + center[i-1][0]) / 2), int((center[i][1] + center[i-1][1]) / 2)))
+            elif (center[i][direction] - center[i-1][direction]) > int(5 * radius) and (center[i][direction] - center[i-1][
+                direction]) < int(7 * radius):  # 这是中间连续空缺两个个圆的情况
+                center.insert(i, (center[i][direction] - 2 * radius - 1, int((center[i][1 ^ direction] + center[i - 1][1 ^ direction]) / 2)))
+                center.insert(i, (center[i][direction] - 2 * radius - 1, int((center[i][1 ^ direction] + center[i - 1][1 ^ direction]) / 2)))
+
+    if len(center) == 1:  # 只检测到一个圆，但长宽比不是一的情况，漏检了周围的圆
+        radius = int(min(CropThing.shape[0] / 2, CropThing.shape[1] / 2)) - 1
+        print("len(center) == 1,  radius= ", radius)
+
+    flag01 = False
+    flag02 = False
+    while not(flag01 and flag02):  # 两个flag都是true的时候停止循环添加。（程序技巧，先写里面在写判断条件）
+        print(direction)
+        if center[0][direction] - radius > 2 * part * radius:  # 左边有大半圆的话
+            if direction == 0:  # 横向 左边缺
+                center.insert(0, (center[0][direction] - 2 * radius, center[0][1 ^ direction]))
+            else:  # 横向 右边缺
+                center.insert(0, (center[0][1 ^ direction], center[0][direction] - 2 * radius))
+        else:
+            flag01 = True
+        if CropThing.shape[1 ^ direction] - center[-1][direction] - radius > 2 * part * radius:  # 右边有大半圆的话
+            if direction == 0:  # 纵向 上边缺
+                center.append((center[-1][direction] + 2 * radius, center[-1][1 ^ direction]))
+            else:  # 纵向 下边缺
+                center.append((center[-1][1 ^ direction], center[-1][direction] + 2 * radius))
+        else:
+            flag02 = True
+
+
+
+    print("after:", center)
+    return center, radius
+
 def find_crop_center(CropThing, color):
     print("def find_crop_center(CropThing, color):  >>>")
     try:
@@ -14,7 +73,7 @@ def find_crop_center(CropThing, color):
         i = contours.index(max(contours, key=cv2.contourArea))  # 列表最大数的 索引
         # contours[i] = cv2.convexHull(contours[i])  # 不能是引用外包的填充方法，外面的线条会干扰 凸包的生成
         img01 = cv2.drawContours(BinThings, contours, i, (0, 0, 255), -1)
-        cv2.imshow("img01", img01)
+        cv2.imshow("BinThings -1 ", img01)
 
         img01 = cv2.cvtColor(img01, cv2.COLOR_BGR2GRAY)
         dist = cv2.distanceTransform(img01, cv2.DIST_L2, 3)  # 单通道灰度图才可以转化成 彩色图不行
@@ -22,8 +81,8 @@ def find_crop_center(CropThing, color):
         cv2.imshow("distance-t", dist_output * 50)
 
         # ret, surface = cv2.threshold(dist, 1, dist.max()*0.5, cv2.THRESH_BINARY)
-        ret, surface = cv2.threshold(dist, dist.max() * 0.75, 255, cv2.THRESH_BINARY)  # 只保留中心点周围的图
-
+        ret, surface = cv2.threshold(dist, dist.max() * 0.8, 255, cv2.THRESH_BINARY)  # 只保留中心点周围的图
+        cv2.imshow("surface", surface)
         surface_fg = np.uint8(surface)
         BinThings, contours, hierarchy = cv2.findContours(surface_fg, cv2.RETR_EXTERNAL,
                                                           cv2.CHAIN_APPROX_SIMPLE)  # 边界是封闭的
@@ -31,8 +90,8 @@ def find_crop_center(CropThing, color):
         x_list = []  # 中心的x坐标
         y_list = []  # 中心的y坐标
         center = []  # 中心的坐标
-        radius = -1
 
+        print("CropThing.shape()" * 10, CropThing.shape)
         for k in range(len(contours)):
             cnt = contours[k]
             M = cv2.moments(cnt)
@@ -43,24 +102,20 @@ def find_crop_center(CropThing, color):
             center.append((cx, cy))
         print("before center is :", center)
         part = 0.5  # 边缘部分比例大于part的都需要找出（返回中心坐标和半径）
-        if np.var(x_list, axis=0) >= np.var(y_list, axis=0) and len(contours) > 1:  # 横向有多个图标，找到半径
+        print(CropThing.shape)
+        if CropThing.shape[0] < CropThing.shape[1]:  # 横向有多个图标，找到半径
             print(" heng " * 10)
-            center = sorted(center, key=lambda x: x[0])  # 升序排列
-            radius = int((center[-1][0] - center[0][0]) / (2 * (len(contours) - 1)))
-            if center[0][0] - radius > 2 * part * radius:  # 左边有大半圆的话
-                center.insert(0, (center[0][0] - 2 * radius, center[0][1]))
-            if BinThings.shape[1] - center[-1][0] - radius > 2 * part * radius:  # 有边有大半圆的话
-                center.append((center[-1][0] + 2 * radius, center[-1][1]))
-        elif np.var(x_list, axis=0) < np.var(y_list, axis=0) and len(contours) > 1:
+            center, radius = find_center(CropThing, center, direction=0)
+            print("center: ", center)
+
+        elif CropThing.shape[0] > CropThing.shape[1]:
             print(" shu " * 10)
-            center = sorted(center, key=lambda x: x[1])  # 升序排列
-            radius = int((center[-1][1] - center[0][1]) / (2 * (len(contours) - 1)))
-            if center[0][1] - radius > 2 * part * radius:  # 上边有大半圆的话
-                center.insert(0, (center[0][0], center[0][1] - 2 * radius))
-            if BinThings.shape[0] - center[-1][1] - radius > 2 * part * radius:  # 下边有大半圆的话
-                center.append((center[-1][0], center[-1][1] + 2 * radius))
+            center, radius = find_center(CropThing, center, direction=1)
+            print("center: ", center)
+
         else:
             print("after len(contours) = 1")
+            radius = []
 
         for i in range(len(center)):
             cv2.circle(CropThing_show, center[i], int(radius), (0, 0, 255), 2)  # 画圆
@@ -377,7 +432,7 @@ def detection(frame, BinColors, color, contours, i):  # 判断是否是需要识
         print(">>> a yellow ETC sign " * 10)
     elif color == "yellow" and wh_ratio[1] == 1 and color_ratio > 0.5:
         print(">>> mabey a yellow work sign")
-
+    center, radius = find_crop_center(CropThing, color)
     # cv2.drawContours(frame, [box[0:2]], 0, (0, 0, 255), 2)   # 画外接矩形
     # cv2.imshow("frame", frame)
     print("wh_ratio:", wh_ratio)

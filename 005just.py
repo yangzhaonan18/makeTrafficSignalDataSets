@@ -20,9 +20,7 @@
 # # range(0, 20, 3)
 # # bf3
 
+a = [1, 2, 3, 4, 60]
 
-a = list(range(10))
-a.insert(-1, 100)
-a.append(120)
-print(a)
-print(a[-1])
+
+print(1 ^ 1)
